@@ -83,7 +83,7 @@ class Auth extends CI_Controller {
      *   email: string (must be university.edu or alumni.university.edulony)
      *   password: string (minimum 8 characters)
      * 
-     * Response Success (200):
+     * Response Success :
      *   {
      *     "message": "Registration successful. Verify email.",
      *     "token": "secure_verification_token_64_chars"
@@ -137,20 +137,20 @@ class Auth extends CI_Controller {
         ]);
     }
 
-    // ========================================================================
+    
     // EMAIL VERIFICATION
-    // ========================================================================
+    
 
     /**
-     * Email Verification Endpoint
+     * Email Verification Endpoint.
      * 
-     * Validates an email verification token and marks the user account as verified.
+     * Validates an emails verification token and marks the user account as verified.
      * Tokens expire after 24 hours and can only be used once. This endpoint is called
-     * by the user after clicking a verification link or manually providing their token.
+     * by the user after clicking a verification link or manually providing their tokenss.
      * 
      * Token Verification Logic:
-     * 1. Retrieve token from query parameter (?token=xyz)
-     * 2. Query email_verification_tokens table for matching token
+     * 1. Retrieve token from query parameter (?token=xyz12345)
+     * 2. Query emailverificationtokens table for matching token,
      * 3. Check if token has been used (used != 1)
      * 4. Verify token hasn't expired (expires_at > NOW())
      * 5. If valid: update users.is_verified=1 and mark token as used
@@ -166,6 +166,7 @@ class Auth extends CI_Controller {
      * Response Error (400):
      *   {"error": "Invalid or expired token"}
      */
+
     public function verify_email()
     {
         $token = $this->input->get("token");
@@ -178,9 +179,9 @@ class Auth extends CI_Controller {
         echo json_encode(["message"=>"Email verified"]);
     }
 
-    // ========================================================================
+    
     // USER LOGIN
-    // ========================================================================
+    
 
     /**
      * User Login Endpoint
@@ -188,10 +189,10 @@ class Auth extends CI_Controller {
      * Authenticates user with email and password credentials. Creates a server-side
      * session upon successful authentication. Email must be verified before login is allowed.
      * 
-     * Authentication Algorithm:
-     * 1. Extract email and password from request
-     * 2. Query database for user record with matching email
-     * 3. Verify user account is email-verified (is_verified=1)
+     * Authentication model:
+     * 1. Extract email and password from request.
+     * 2. Query database for user record with matching email.
+     * 3. Check user account is email-verified (is_verified=1)
      * 4. Compare submitted password against stored bcrypt hash
      * 5. If all checks pass: create session with user_id, email, logged_in flag
      * 6. Return success message
@@ -235,9 +236,9 @@ class Auth extends CI_Controller {
         echo json_encode(["message"=>"Login successful"]);
     }
 
-    // ========================================================================
+    
     // USER LOGOUT
-    // ========================================================================
+    
 
     /**
      * User Logout Endpoint
