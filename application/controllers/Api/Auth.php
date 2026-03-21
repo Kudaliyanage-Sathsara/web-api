@@ -52,33 +52,34 @@ class Auth extends CI_Controller {
         return is_array($json) ? $json : [];
     }
 
-    // ========================================================================
+    
     // USER REGISTRATION
-    // ========================================================================
+    
 
     /**
      * User Registration Endpoint
      * 
-     * Creates a new user account with email and password validation. Enforces
-     * university email domain restrictions to ensure only authorized users
-     * can create accounts. Generates and sends a verification token for email
-     * confirmation before the account becomes fully active.
-     * 
-     * Validation Flow:
+     * Creates a new user account with email and password validation.
+     * university email domain restrictions to ensure only valid users.
+     * can create accounts. Generates and sends a verification token for email.
+     * confirmation before the account becomes fully verifid.
+     
+     * ? Validation Flow:
+     
      * 1. Extract email and password from JSON or form data
-     * 2. Validate email format and allowed domain (university.edu, alumni.university.edu)
+     * 2. Validate email format and allowed domain (university.edu, alumni.university.edu on;y)
      * 3. Enforce minimum password length (8 characters minimum)
-     * 4. Check if email already registered in database
-     * 5. Hash password using bcrypt with cost factor 10
-     * 6. Create user record with is_verified=0
-     * 7. Generate secure verification token
-     * 8. Store token with 24-hour expiration
-     * 9. Return token to client for verification endpoint
+     * 4. Check if email is already registered in database.
+     * 5. Hash password using bcrypt with cost factor 10.
+     * 6. Create user record with is_verified=0.
+     * 7. Generate secure verification token.
+     * 8. Store token with 24 hours expiration.
+     * 9. Return token to client for verification endpointss.
      * 
      * @return void Outputs JSON response with message or error
      * 
      * Request (JSON or Form):
-     *   email: string (must be university.edu or alumni.university.edu)
+     *   email: string (must be university.edu or alumni.university.edulony)
      *   password: string (minimum 8 characters)
      * 
      * Response Success (200):
@@ -92,6 +93,7 @@ class Auth extends CI_Controller {
      *   {"error": "Weak password"}
      *   {"error": "Email already exists"}
      */
+    
     public function register()
     {
         $input = $this->getJsonInput();
@@ -146,7 +148,6 @@ class Auth extends CI_Controller {
      * 
      * Request (GET):
      *   ?token=secure_verification_token_64_chars
-     * 
      * Response Success (200):
      *   {"message": "Email verified"}
      * 
