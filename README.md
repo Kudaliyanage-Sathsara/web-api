@@ -1,4 +1,4 @@
-# web_api
+# web_API
 
 This is a PHP CodeIgniter-based web API project. It runs under XAMPP (Apache + PHP + MySQL).
 
