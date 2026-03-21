@@ -246,26 +246,27 @@ class Auth extends CI_Controller {
      * Destroys the current user session and logs out the user.
      * This clears all session data including user_id, email, and logged_in flag.
      * 
-     * @return void Outputs JSON response with message
+     * @return void Outputs JSON response with messages
      * 
      * Response Success (200):
      *   {"message": "Logged out"}
      */
+
     public function logout()
     {
         $this->session->sess_destroy();
         echo json_encode(["message"=>"Logged out"]);
     }
 
-    // ========================================================================
+    
     // PASSWORD RESET REQUEST
-    // ========================================================================
+    
 
     /**
      * Request Password Reset Endpoint
-     * 
+     * s
      * Initiates password reset process by generating a reset token and storing it
-     * in the database with a 1-hour expiration. In production, the token should be
+     * in the database with a 1 hr expiration. In production, the token should be
      * sent to the user's email with a reset link.
      * 
      * Password Reset Flow:
@@ -274,12 +275,12 @@ class Auth extends CI_Controller {
      * 3. Generate secure random token (64-character hex string)
      * 4. Store token with user_id and 1-hour expiration
      * 5. In production: send email with reset link containing token
-     * 6. Return token to client (note: should only be sent via email in production)
+     * 6. Return token to client 
      * 
      * Security Considerations:
      * - Token expires after 1 hour to limit attack window
-     * - Tokens can only be used once (used flag is set after redemption)
-     * - Token length is 64 characters (256 bits of entropy from random_bytes(32))
+     * - Tokens can only be used once to prevent replay attacks
+     * - Token length is 64 characters (256 bits) for strong security
      * 
      * @return void Outputs JSON response with message or error
      * 
