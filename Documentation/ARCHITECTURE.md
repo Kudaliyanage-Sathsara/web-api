@@ -29,6 +29,7 @@ The Alumni Profile API is built on a deliberate, layered architecture that empha
 
 ### High-Level System Diagram
 
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        CLIENT LAYER                              │
