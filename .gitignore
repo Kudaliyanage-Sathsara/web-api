@@ -1,0 +1,61 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# PHP / Composer
+/vendor/
+/composer.lock
+/.env
+
+# IDE/editor
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Logs, caches, uploads
+/application/cache/
+/application/logs/
+/uploads/
+
+# PHPUnit
+/build/
+phpunit.xml
+
+# Node
+/node_modules/
+
+# Misc
+*.log
+*.sql
+.DS_Store
+
+application/cache/*
+!application/cache/index.html
+
+application/logs/*
+!application/logs/index.html
+
+!application/*/.htaccess
+
+composer.lock
+tests/mocks/database/ci_test.sqlite
+
+user_guide_src/build/*
+user_guide_src/cilexer/build/*
+user_guide_src/cilexer/dist/*
+user_guide_src/cilexer/pycilexer.egg-info/*
+/vendor/
+
+# IDE Files
+#-------------------------
+/nbproject/
+.idea/*
+
+## Sublime Text cache files
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+/tests/tests/
+/tests/results/
