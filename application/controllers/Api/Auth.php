@@ -69,6 +69,7 @@ class Auth extends CI_Controller {
      * 1. Extract email and password from JSON or form data
      * 2. Validate email format and allowed domain (university.edu, alumni.university.edu on;y)
      * 3. Enforce minimum password length (8 characters minimum)
+     * *. Enforce password complexity (uppercase, lowercase, number, special character)
      * 4. Check if email is already registered in database.
      * 5. Hash password using bcrypt with cost factor 10.
      * 6. Create user record with is_verified=0.
