@@ -2,121 +2,73 @@
 
 ## Overview
 
-The Alumni Profile API is built on a deliberate, layered architecture that emphasizes clear component separation, maintainability, and scalability. The system follows established software architecture principles including Model-View-Controller (MVC), separation of concerns, and dependency injection patterns.
+The Alumni Profile API is a RESTful web service built using CodeIgniter 3 (PHP) that manages alumni user profiles, authentication, and related data operations. The system implements a layered architecture pattern with MVC (Model-View-Controller) principles, emphasizing clean separation of concerns, maintainability, scalability, and security.
 
-**Architecture Pattern**: Layered Architecture with MVC + Helpers
-
-**Framework**: CodeIgniter 3 (PHP)
-
----
-
+===================================================================
+                                                                    
 ## Table of Contents
 
-1. [System Architecture Overview](#system-architecture-overview)
-2. [Layered Architecture](#layered-architecture)
-3. [Component Responsibilities](#component-responsibilities)
-4. [Data Flow & Interactions](#data-flow--interactions)
-5. [Design Patterns Used](#design-patterns-used)
-6. [Separation of Concerns](#separation-of-concerns)
-7. [Dependency Injection](#dependency-injection)
-8. [Communication Patterns](#communication-patterns)
-9. [Error Handling Architecture](#error-handling-architecture)
-10. [Security Architecture](#security-architecture)
+** Ctrl + system-architecture-overview **
+                                                                    
+1. [System Architecture Overview](#system-architecture-overview)    
+2. [Layered Architecture](#layered-architecture)                    
+3. [Data Flow & Interactions](#data-flow--interactions)             
+4. [Design Patterns Used](#design-patterns-used)                    
+5. [Dependency Injection]()                    
+6. [Error Handling Architecture](#error-handling-architecture)      
+7. [Security Architecture](#security-architecture)                  
+                                                                    
+====================================================================    
+
+### Technology Stack
+
+- *Framework*: CodeIgniter 3.1.13 (PHP 7.4+)
+- *Database*: MySQL with foreign key constraints and indexing
+- *Authentication*: Session-based with secure token verification
+- *Security*: bcrypt password hashing, CSRF protection, input sanitization
+- *API Format*: RESTful JSON endpoints with consistent error handling
+
+### System Components
+
+- *Controllers*: Handle HTTP requests and responses (`Auth.php`, `Profile.php`)
+- *Models*: Business logic and data operations (`User_model.php`,                `Profile_model.php`, `Token_model.php`)
+- *Helpers*: Utility functions for security and validation (`security_helper.php`)
+- *Database*: 10+ tables with referential integrity and cascading deletes
+
+This documentation provides detailed insights into the system's architecture, design patterns, data flows, and implementation details.
 
 ---
-
+                                            
+***==========================================================***: 
 ## System Architecture Overview
+***==========================================================***: 
 
-### High-Level System Diagram
+
+# Architecture Diagram
+
+![App Screenshot](images/Architecturre.png)
+
+**Figure 1**: High-level architecture diagram showing the four-layer structure of the Alumni Profile API. The diagram illustrates how client requests flow through the Presentation Layer (Controllers), Business Logic Layer (Models), Utility Layer (Helpers), and Data Layer (Database), with clear separation of concerns and data flow directions.
+
+The diagram depicts the complete request-response cycle starting from external clients making HTTP requests to the API endpoints. Controllers in the presentation layer act as the entry point, handling routing, input validation, and response formatting. Business logic is encapsulated in models that interact with the database through abstracted query operations, ensuring data integrity and security.
+
+Utility functions and helpers provide cross-cutting concerns such as security token generation, email validation, and input sanitization. The database layer maintains persistent storage with proper indexing, foreign key relationships, and cascading operations to ensure referential integrity.
+
+Arrows in the diagram show the directional flow of data and control, with authentication checks occurring at multiple layers to prevent unauthorized access. This layered approach enables maintainability, testability, and scalability while keeping each component focused on its specific responsibilities.
 
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        CLIENT LAYER                              │
-│  (Web Browser, Mobile App, Third-party Integration)              │
-└────────────────────────┬────────────────────────────────────────┘
-                         │ HTTP Requests/Responses
-                         │ JSON over REST
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                            │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │           API Endpoints (Controllers)                    │   │
-│  │  ┌────────────────┐  ┌────────────────┐                 │   │
-│  │  │  Auth          │  │  Profile       │                 │   │
-│  │  │  Controller    │  │  Controller    │                 │   │
-│  │  │                │  │                │                 │   │
-│  │  │ - register()   │  │ - get_profile()│                 │   │
-│  │  │ - login()      │  │ - update_prof()│                 │   │
-│  │  │ - logout()     │  │ - add_section()│                 │   │
-│  │  │ - verify_email │  │ - delete_etc() │                 │   │
-│  │  └────────────────┘  └────────────────┘                 │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└────────────────────────┬────────────────────────────────────────┘
-                         │ Method Calls
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                  BUSINESS LOGIC LAYER                            │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │           Models (Data Access & Business Logic)          │   │
-│  │  ┌────────────────┐  ┌────────────────┐                 │   │
-│  │  │  User_model    │  │  Profile_model │                 │   │
-│  │  │                │  │                │                 │   │
-│  │  │ - create_user()│  │ - save_info()  │                 │   │
-│  │  │ - verify_user()│  │ - list_records │                 │   │
-│  │  │ - get_by_email │  │ - get_record() │                 │   │
-│  │  └────────────────┘  └────────────────┘                 │   │
-│  │  ┌────────────────┐                                      │   │
-│  │  │  Token_model   │                                      │   │
-│  │  │                │                                      │   │
-│  │  │ - verify_token │                                      │   │
-│  │  │ - create_token │                                      │   │
-│  │  └────────────────┘                                      │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└────────────────────────┬────────────────────────────────────────┘
-                         │ Database Queries
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                  HELPER LAYER                                    │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │        Utility Functions & Helpers                       │   │
-│  │  ┌────────────────────┐  ┌─────────────────────┐        │   │
-│  │  │ security_helper.php │  │ form_helper.php     │        │   │
-│  │  │                     │  │                     │        │   │
-│  │  │ - generate_token()  │  │ - form_open()      │        │   │
-│  │  │ - validate_email()  │  │ - form_input()     │        │   │
-│  │  └────────────────────┘  └─────────────────────┘        │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                      DATA LAYER                                  │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │           Database (MySQL/MariaDB)                       │   │
-│  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐     │   │
-│  │  │ users        │ │ degrees      │ │ employment   │ ... │   │
-│  │  ├──────────────┤ ├──────────────┤ ├──────────────┤     │   │
-│  │  │ id (PK)      │ │ id (PK)      │ │ id (PK)      │     │   │
-│  │  │ email        │ │ user_id (FK) │ │ user_id (FK) │     │   │
-│  │  │ password     │ │ institution  │ │ company      │     │   │
-│  │  │ is_verified  │ │ degree       │ │ role         │     │   │
-│  │  └──────────────┘ └──────────────┘ └──────────────┘     │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
+***==========================================================***: 
 ## Layered Architecture
+***==========================================================***: 
 
-The application follows a 4-layer architecture pattern:
+The application follows a 4 layer architecture pattern:
 
 ### Layer 1: Presentation Layer (Controllers)
 
 **Location**: `application/controllers/Api/`
 
-**Responsibility**: 
+**Responsibilies**:
+
 - Handle HTTP requests and responses
 - Parse and validate input data
 - Route requests to appropriate business logic
@@ -136,12 +88,16 @@ The application follows a 4-layer architecture pattern:
 
 **Request Flow**:
 ```
-HTTP Request → Router → Controller Method → Validate → Business Logic → Response
+1. HTTP Request
+2. Router
+3. Controller Method
+4. Validate
+5. Business Logic
+6. Response
 ```
 
----
-
 ### Layer 2: Business Logic Layer (Models)
+
 
 **Location**: `application/models/`
 
@@ -156,25 +112,11 @@ HTTP Request → Router → Controller Method → Validate → Business Logic �
 - `User_model.php` - User account management
 - `Profile_model.php` - Profile data management  
 - `Token_model.php` - Authentication token handling
-
-**Key Characteristics**:
-- Encapsulate database interactions
-- Implement business rules
-- Reusable across multiple controllers
-- Database query abstraction
-- Transaction management
-
-**Model Responsibilities by Table**:
-
-| Model | Responsibility | Methods |
-|-------|-----------------|---------|
-| User_model | User accounts, authentication | create_user(), get_by_email(), verify_user() |
-| Token_model | Token lifecycle management | create_verification_token(), verify_token() |
-| Profile_model | Profile data CRUD | get_personal_info(), list_records(), create_record(), update_record(), delete_record() |
-
 ---
 
+
 ### Layer 3: Helper Layer (Utilities)
+ 
 
 **Location**: `application/helpers/`
 
@@ -188,27 +130,20 @@ HTTP Request → Router → Controller Method → Validate → Business Logic �
 - `security_helper.php` - Cryptographic and validation utilities
 - Framework helpers (form_helper, url_helper, etc.)
 
-**Key Characteristics**:
-- No dependencies on models or controllers
-- Pure functions (no side effects)
-- Reusable across application
-- Security-focused implementations
-
 **Security Helper Functions**:
 ```
-generate_secure_token()        → Cryptographically secure token generation
-validate_university_email()    → Email domain whitelist validation
+generate_secure_token()        = Cryptographically secure token generation
+validate_university_email()    = Email domain whitelist validation
 ```
 
 ---
 
 ### Layer 4: Data Layer (Database)
 
-**Location**: MySQL/MariaDB Database
+**Location**: MySQl Database
 
 **Responsibility**:
 - Persistent data storage
-- ACID transaction support
 - Query execution and result handling
 - Foreign key constraint enforcement
 - Data integrity through indexes
@@ -220,9 +155,8 @@ validate_university_email()    → Email domain whitelist validation
 
 ---
 
-## Component Responsibilities
-
 ### Controllers (Presentation Layer)
+
 
 #### Auth Controller
 
@@ -232,26 +166,20 @@ validate_university_email()    → Email domain whitelist validation
 
 **Public Methods**:
 
-| Method | Responsibility | Returns |
-|--------|-----------------|---------|
-| `register()` | Create new user account | JSON: message + token |
-| `verify_email()` | Activate account via email token | JSON: message |
-| `login()` | Authenticate user and create session | JSON: message |
-| `logout()` | Terminate user session | JSON: message |
-| `request_reset()` | Initiate password reset | JSON: message + token |
-| `reset_password()` | Update password using reset token | JSON: message |
+| Method  
+
+!`register()`  
+!`verify_email()` 
+!`login()` 
+!`logout()`
+!`request_reset()` 
+!`reset_password()`
 
 **Protected Methods**:
 
-| Method | Responsibility |
-|--------|-----------------|
-| `getJsonInput()` | Parse JSON request body with caching |
+| Method 
 
-**Dependencies**:
-- User_model (user operations)
-- Token_model (token operations)
-- security_helper (token generation, email validation)
-- CodeIgniter Session library
+!`getJsonInput()` 
 
 ---
 
@@ -274,44 +202,41 @@ private $sectionTables = [
 
 **Public Methods**:
 
-| Method | Responsibility |
-|--------|-----------------|
-| `get_profile()` | Retrieve complete user profile with all sections |
-| `update_profile()` | Update personal info (name, biography) |
-| `upload_profile_image()` | Handle profile image file upload |
-| `list_section($section)` | List all records in a profile section |
-| `add_section($section)` | Create new record in profile section |
-| `update_section($section, $id)` | Update existing section record |
-| `delete_section($section, $id)` | Delete section record |
-| `add_linkedin()` | Add LinkedIn profile URL |
-| `list_linkedin()` | List all LinkedIn profiles |
-| `update_linkedin($id)` | Update LinkedIn profile |
-| `delete_linkedin($id)` | Delete LinkedIn profile |
+| Method 
+
+| `get_profile()` 
+| `update_profile()`
+| `upload_profile_image()`
+| `list_section($section)` 
+| `add_section($section)`
+| `update_section($section, $id)` 
+| `delete_section($section, $id)` 
+| `add_linkedin()` 
+| `list_linkedin()` 
+| `update_linkedin($id)` 
+| `delete_linkedin($id)`
 
 **Protected Methods**:
 
-| Method | Responsibility |
-|--------|-----------------|
-| `getJsonInput()` | Parse JSON request body |
-| `require_auth()` | Check authentication and return user_id |
-| `is_valid_url()` | Validate URL format |
-| `is_valid_date()` | Validate date format (YYYY-MM-DD) |
+| Method 
 
-**Dependencies**:
-- Profile_model (profile operations)
-- CodeIgniter Session library
-- CodeIgniter Upload library
-- CodeIgniter Helpers (url, file)
+| `getJsonInput()` 
+| `require_auth()` 
+| `is_valid_url()` 
+| `is_valid_date()` s
 
 ---
 
+
 ### Models (Business Logic Layer)
+
 
 #### User Model
 
 **File**: `application/models/User_model.php`
 
 **Single Responsibility**: Manage user account operations
+
 
 **Public Methods**:
 
@@ -461,8 +386,9 @@ validate_university_email($email)
 - No sensitive data logging
 
 ---
-
+***==========================================================***: 
 ## Data Flow & Interactions
+***==========================================================***: 
 
 ### User Registration Flow
 
@@ -561,8 +487,9 @@ validate_university_email($email)
 ```
 
 ---
-
+***==========================================================***: 
 ## Design Patterns Used
+***==========================================================***: 
 
 ### 1. Model-View-Controller (MVC)
 
@@ -579,6 +506,7 @@ validate_university_email($email)
 ---
 
 ### 2. Repository Pattern
+
 
 **Implementation**: Models act as repositories for database access
 
@@ -599,6 +527,9 @@ public function get_by_email($email) {
 - Testable via mocks
 
 ---
+
+
+
 
 ### 3. Active Record Pattern
 
@@ -626,7 +557,10 @@ $this->db->where("id", $id)->delete("users");
 
 ---
 
+
 ### 4. Generic CRUD Operations
+
+
 
 **Implementation**: Profile_model provides generic methods for all profile sections
 
@@ -670,264 +604,25 @@ $token = generate_secure_token();
 - No object instantiation needed
 - Simple, focused functions
 
----
 
-### 6. Dependency Injection (Implicit)
 
-**Implementation**: CodeIgniter loads dependencies via load patterns
 
-**Example**:
-```php
-// In controller constructor
-public function __construct() {
-    parent::__construct();
-    $this->load->model('User_model');
-    $this->load->model('Token_model');
-}
 
-// Usage
-$user = $this->User_model->get_by_email($email);
-```
 
-**Benefits**:
-- Controllers don't create their own dependencies
-- Easy to mock for testing
-- Loose coupling
-
----
-
-### 7. Template Method Pattern
-
-**Implementation**: Controller methods follow consistent template
-
-**Example**:
-```php
-// All controller methods follow:
-public function someEndpoint() {
-    1. Validate authentication (require_auth)
-    2. Parse/validate input
-    3. Call business logic (models)
-    4. Handle errors
-    5. Return JSON response
-}
-```
-
-**Benefits**:
-- Consistent request handling
-- Easy to understand flow
-- Reduces bugs from inconsistent patterns
-
----
-
-## Separation of Concerns
-
-### By Layer
 
 ```
-PRESENTATION LAYER (Controllers)
-├─ Responsibility: HTTP handling, input parsing, response formatting
-├─ Should NOT: Access database directly, implement business logic
-└─ Complexity: Low-Medium
-
-BUSINESS LOGIC LAYER (Models)
-├─ Responsibility: Business rules, data operations, integrity
-├─ Should NOT: Format HTTP responses, handle sessions
-└─ Complexity: Medium-High
-
-HELPER LAYER (Utilities)
-├─ Responsibility: Utility functions, pure calculations
-├─ Should NOT: Depend on models/controllers, have side effects
-└─ Complexity: Low
-
-DATA LAYER (Database)
-├─ Responsibility: Persistent storage, transactions
-├─ Should NOT: Implement business logic
-└─ Complexity: Medium
 ```
 
-### By Concern Type
 
-| Concern | Responsibility | Location |
-|---------|-----------------|----------|
-| HTTP Handling | Parse requests, format responses | Controllers |
-| Authentication | Validate credentials, manage sessions | Models + Controllers |
-| Validation | Check data format and constraints | Models + Helpers |
-| Authorization | Verify user owns data | Models (user_id checks) |
-| Data Persistence | Database operations | Models |
-| Cryptography | Token generation, hashing | Helpers + Models |
-| Email Management | Send/receive emails | (Separate service) |
-| File Upload | Process file uploads | Controllers |
 
----
-
-## Dependency Injection
-
-### Current Implementation (Implicit)
-
-**Pattern**: CodeIgniter's loader-based injection
-
-```php
-public function __construct() {
-    parent::__construct();
-    // Dependencies injected via load()
-    $this->load->model('User_model');
-    $this->load->helper('security_helper');
-    $this->load->library('session');
-}
-```
-
-**Advantages**:
-- Simple and clear
-- CodeIgniter standard
-- Minimal boilerplate
-
-**Disadvantages**:
-- Hard to unit test without CodeIgniter
-- Global state via $this
-
----
-
-### Recommended Enhancement (Explicit)
-
-**Future Pattern**: Constructor-based DI
-
-```php
-public function __construct(UserModel $userModel, TokenModel $tokenModel) {
-    parent::__construct();
-    $this->userModel = $userModel;
-    $this->tokenModel = $tokenModel;
-}
-
-// Usage
-$user = $this->userModel->get_by_email($email);
-```
-
-**Advantages**:
-- Easier to test with mocks
-- Clear dependencies
-- No magic loader calls
-
----
-
-## Communication Patterns
-
-### Controller → Model Communication
-
-**Pattern**: Method calls with parameters
-
-```php
-// Controller calls model method
-$user = $this->User_model->get_by_email($email);
-
-// Returns model instance
-return (object) ["id" => 1, "email" => "...", "password" => "..."];
-```
-
-**Flow**:
-```
-Controller Method
-    ↓ (call with params)
-Model Method
-    ↓ (execute query)
-Database
-    ↓ (return results)
-Model (format result)
-    ↓ (return object/array)
-Controller (process result)
-```
-
----
-
-### Controller → Helper Communication
-
-**Pattern**: Function calls
-
-```php
-// Controller calls helper function
-$token = generate_secure_token();
-
-// Function executes and returns
-return "a1b2c3d4e5f6...";
-```
-
-**Benefits**:
-- Simple, direct communication
-- No state
-- Easy to test
-
----
-
-### Controller → View Communication
-
-**Pattern**: JSON serialization (REST API specific)
-
-```php
-// Controller prepares data
-$result = [
-    "message" => "Success",
-    "data" => $user
-];
-
-// Encodes and outputs
-echo json_encode($result);
-```
-
----
-
-### Model ↔ Database Communication
-
-**Pattern**: Query Builder (Active Record)
-
-```php
-// Model builds query
-$this->db->where("user_id", $user_id);
-$this->db->where("used", 0);
-$this->db->where("expires_at >", date("Y-m-d H:i:s"));
-
-// Executes query
-$result = $this->db->get("table_name");
-
-// Returns stdObject or array
-return $result->row();
-```
-
----
-
+***==========================================================***: 
 ## Error Handling Architecture
-
-### Error Hierarchy
-
-```
-┌─────────────────────────────────┐
-│     Client Error (4xx)          │
-├─────────────────────────────────┤
-│ 400 Bad Request                 │
-│  ├─ Invalid input               │
-│  ├─ Validation failure          │
-│  └─ Malformed request           │
-│                                 │
-│ 401 Unauthorized                │
-│  ├─ Not authenticated           │
-│  ├─ Session expired             │
-│  └─ Invalid credentials         │
-│                                 │
-│ 404 Not Found                   │
-│  ├─ Resource doesn't exist      │
-│  ├─ Unknown endpoint            │
-│  └─ Record not found            │
-└─────────────────────────────────┘
-
-┌─────────────────────────────────┐
-│     Server Error (5xx)          │
-├─────────────────────────────────┤
-│ 500 Internal Server Error       │
-│  ├─ Database error              │
-│  ├─ Unhandled exception         │
-│  └─ Server misconfiguration     │
-└─────────────────────────────────┘
-```
+***==========================================================***: 
+The Alumni Profile API implements a comprehensive error handling strategy that ensures consistent, secure, and informative error responses across all endpoints. Error handling is implemented at multiple layers to provide appropriate feedback while preventing information leakage.
 
 ### Error Response Format
+
+All API errors follow a consistent JSON structure to ensure predictable client handling:
 
 ```json
 {
@@ -935,7 +630,15 @@ return $result->row();
 }
 ```
 
+**Error Response Standards**:
+- Always returns JSON format
+- Single "error" key with descriptive message
+- No sensitive information exposed
+- Appropriate HTTP status codes
+
 ### Error Handling in Controllers
+
+Controllers implement error handling at the request processing level, validating inputs and managing HTTP responses appropriately.
 
 ```php
 // Input validation → 400 error
@@ -960,76 +663,52 @@ if (!$record) {
 }
 ```
 
----
+### HTTP Status Code Mapping
 
-## Security Architecture
+**Common Status Codes Used**:
+- `200 OK` - Successful operations
+- `400 Bad Request` - Invalid input data
+- `401 Unauthorized` - Authentication required/failed
+- `404 Not Found` - Resource doesn't exist
+- `500 Internal Server Error` - Server-side errors
 
-### Authentication Architecture
+### Error Handling Strategy
 
-```
-USER REGISTRATION
-├─ Email domain validation (whitelist)
-├─ Password hashing (bcrypt)
-├─ Email verification (token-based)
-└─ Account activation (is_verified flag)
+**Layered Error Handling**:
+1. **Input Validation**: Check required fields, data types, formats
+2. **Business Logic Validation**: Verify business rules and constraints
+3. **Database Error Handling**: Manage connection issues, constraint violations
+4. **Security Validation**: Prevent unauthorized access, validate tokens
 
-USER LOGIN
-├─ Email lookup
-├─ Verification check
-├─ Password comparison (bcrypt verify)
-├─ Session creation
-└─ Session timeout (30 min)
+**Error Propagation**:
+- Errors bubble up from models to controllers
+- Controllers format appropriate responses
+- Sensitive errors are sanitized before client exposure
+- Logging captures detailed error information for debugging
 
-SESSION MANAGEMENT
-├─ Server-side sessions (PHP)
-├─ Session cookies (HTTP only)
-├─ User data in session (user_id, email, logged_in)
-└─ Session destruction on logout
-```
+### Security Considerations
 
----
+**Error Message Sanitization**:
+- No database errors exposed to clients
+- No stack traces in production responses
+- Generic messages for security-related failures
+- Detailed logging for internal monitoring
 
-### Data Access Control
+**Rate Limiting Integration**:
+- Error responses can trigger rate limiting
+- Prevents brute force through error analysis
+- Maintains API stability under attack
 
-```
-USER ISOLATION
-├─ All queries filtered by user_id
-├─ Models verify ownership
-├─ Controllers call require_auth()
-└─ Prevent cross-user access
+### Best Practices Implemented
 
-EXAMPLE (Profile update):
-├─ require_auth() → Get user_id from session
-├─ Model: WHERE user_id = ? AND id = ?
-├─ Ensures user can only modify their own data
-└─ Database enforces foreign key integrity
-```
+✓ Consistent error response format
+✓ Appropriate HTTP status codes
+✓ Input validation at entry points
+✓ Sanitized error messages
+✓ Comprehensive error logging
+✓ Graceful degradation
+✓ Client-friendly error descriptions
 
----
-
-### Input Validation
-
-```
-VALIDATION LAYERS
-
-Layer 1: Controller
-├─ Required field checks
-├─ Type validation
-└─ Format checking
-
-Layer 2: Helper Functions
-├─ Email domain validation
-├─ URL format validation
-├─ Date format validation
-└─ Cryptographic token generation
-
-Layer 3: Model
-├─ Database constraints
-├─ Foreign key validation
-└─ Unique constraint enforcement
-```
-
----
 
 ## Extensibility & Scalability
 
@@ -1097,113 +776,101 @@ public function perform_operation($user_id, $data) {
 POST /api/SomeController/new_endpoint
 ```
 
----
 
-### Performance Optimization Points
 
-**Database Level**:
-- Indexes on user_id (fast lookups)
-- Indexes on email (authentication)
-- Indexes on token fields (verification)
 
-**Application Level**:
-- Generic CRUD reduces database calls
-- Query caching via static variables (getJsonInput)
-- Session caching prevents repeated user lookups
 
-**Recommended Improvements**:
-- Add database query result caching (Redis)
-- Implement API rate limiting
-- Add request/response compression
-- Optimize image upload processing
 
----
+***==========================================================***: 
+## Security Architecture
+***==========================================================***: 
+The Alumni Profile API implements a comprehensive security architecture with multiple layers of protection to ensure data confidentiality, integrity, and availability.
 
-## Component Interaction Diagram
+### Authentication & Authorization
 
-```
-API REQUEST
-    ↓
-┌─────────────────────┐
-│   Router            │ (Route matching)
-│ (config/routes.php) │
-└──────────┬──────────┘
-           ↓
-┌─────────────────────────────────┐
-│   Controller                    │
-│ ├─ receive HTTP request        │
-│ ├─ parse input                 │
-│ ├─ call require_auth()         │
-│ └─ call helper/model functions │
-└──────────┬──────────────────────┘
-           ↓
-    ┌──────┴──────────┬──────────────┐
-    ↓                 ↓              ↓
-┌─────────────┐ ┌──────────┐ ┌─────────────┐
-│Helper       │ │Model     │ │Library      │
-│Functions    │ │Business  │ │Session,     │
-│             │ │Logic     │ │Upload, etc  │
-│- generate   │ │          │ │             │
-│  token()    │ │- CRUD    │ └─────────────┘
-│- validate   │ │- get_    │
-│  email()    │ │  by_id() │
-└─────────────┘ └────┬─────┘
-                     ↓
-              ┌─────────────────┐
-              │  Database       │
-              │ (Query Builder) │
-              │  execute SQL    │
-              └─────────────────┘
-                     ↓
-              ┌─────────────────┐
-              │  MySQL/MariaDB  │
-              │  Data Storage   │
-              └─────────────────┘
-                     ↓
-    ┌────────────────┴────────────────┐
-    ↓                                 ↓
-Result Object/Array            ← Return to Model
-    ↓
-Format for Response
-    ↓
-JSON Encode
-    ↓
-HTTP Response with Status Code
-    ↓
-CLIENT
+**Session-Based Authentication**:
+- Server-side session storage with configurable timeout (1800 seconds)
+- Session ID transmitted via secure HTTP-only cookies
+- User verification required for email-verified accounts only
+- Automatic session cleanup on logout
+
+**Password Security**:
+- bcrypt hashing with cost factor 10 for password storage
+- Minimum 8-character passwords with complexity requirements:
+  - At least one uppercase letter
+  - At least one lowercase letter
+  - At least one number
+  - At least one special character
+- Secure password verification using `password_verify()`
+
+**Token-Based Verification**:
+- Cryptographically secure token generation (256-bit entropy)
+- Email verification tokens with 24-hour expiration
+- Password reset tokens with 1-hour expiration
+- One-time use tokens to prevent replay attacks
+
+### Input Validation & Sanitization
+
+**Request Validation**:
+- JSON input parsing with fallback to form data
+- Email domain whitelist validation (university.edu, alumni.university.edu)
+- URL and date format validation
+- Required field validation with appropriate error responses
+
+**Data Sanitization**:
+- CodeIgniter's input class sanitization
+- Prepared statements prevent SQL injection
+- XSS protection through input filtering
+
+### Data Protection
+
+**Database Security**:
+- Foreign key constraints with cascading deletes
+- Indexed columns for performance and integrity
+- No sensitive data logging
+- Parameterized queries prevent SQL injection
+
+**API Security**:
+- RESTful endpoint design
+- Consistent error response format (no information leakage)
+- HTTP status codes for different error types
+- CSRF protection through session validation
+
+### Security Helper Functions
+
+**Core Security Utilities**:
+```php
+generate_secure_token()
+  → 64-character hex token from random_bytes(32)
+  → Used for email verification and password reset
+
+validate_university_email($email)
+  → Domain whitelist validation
+  → Prevents unauthorized registrations
 ```
 
----
+### Threat Mitigation
 
-## Architecture Principles Applied
+- **Brute Force Protection**: Account lockout not implemented (consider adding)
+- **Rate Limiting**: Not implemented at API level (consider adding)
+- **HTTPS Enforcement**: Assumed at web server level
+- **Logging**: Security events logged for monitoring
+- **Access Control**: User-scoped data access prevents unauthorized viewing
 
-### SOLID Principles
+### Security Best Practices Implemented
 
-| Principle | Application |
-|-----------|------------|
-| **S**ingle Responsibility | Each model/controller handles one concern |
-| **O**pen/Closed | Generic CRUD methods extensible without modification |
-| **L**iskov Substitution | Models interchangeable (same interface) |
-| **I**nterface Segregation | Helpers provide focused functions |
-| **D**ependency Inversion | Controllers depend on abstractions (models) |
+✓ Password complexity requirements
+✓ Secure password hashing (bcrypt)
+✓ Session management
+✓ Input validation
+✓ SQL injection prevention
+✓ XSS protection
+✓ Secure token generation
+✓ Email verification workflow
+✓ Error message sanitization
+✓ Database constraints
 
-### DRY (Don't Repeat Yourself)
-
-- Generic CRUD methods in Profile_model
-- Reusable helper functions
-- Common validation patterns
-
-### KISS (Keep It Simple, Stupid)
-
-- Straightforward controller-model-helper structure
-- Clear separation of concerns
-- Minimal abstraction layers
-
----
-
-## Conclusion
-
-The Alumni Profile API architecture demonstrates:
+This security architecture provides a solid foundation while remaining extensible for additional security measures as the system grows.
 
 ✓ **Clear Separation of Concerns** - Each layer has distinct responsibility
 ✓ **Scalability** - Generic patterns support unlimited extensions
