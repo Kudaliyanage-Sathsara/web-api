@@ -104,8 +104,19 @@ class Auth extends CI_Controller {
             echo json_encode(["error"=>"Invalid university email"]);
             return;
         }
-        if(strlen($password) < 8){
-            echo json_encode(["error"=>"Weak password"]);
+            if(strlen($password) < 8){
+                echo json_encode(["error"=>"Weak password"]);
+                return;
+            }
+
+        if(!preg_match('/[A-Z]/', $password) ||
+           !preg_match('/[a-z]/', $password) ||
+           !preg_match('/[0-9]/', $password) ||
+           !preg_match('/[\W]/', $password)) {
+            
+            echo json_encode([
+                "error" => "Password must include uppercase, lowercase, number, and special character"
+            ]);
             return;
         }
         if($this->User_model->get_by_email($email)){
