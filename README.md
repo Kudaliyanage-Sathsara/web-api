@@ -1,6 +1,6 @@
 # web_API
 
-This is a  CodeIgniter-based web API project. It runs under XAMPP (Apache + PHP + MySQL).
+This is a PHP CodeIgniter-based web API project. It runs under XAMPP (Apache + PHP + MySQL).
 
 Quick start (local, Windows + XAMPP):
 
