@@ -8,13 +8,11 @@ The Alumni Profile API is a RESTful web service built using CodeIgniter 3 (PHP) 
                                                                     
 ## Table of Contents
 
-** Ctrl + system-architecture-overview **
+** **
                                                                     
 1. [System Architecture Overview](#system-architecture-overview)    
-2. [Layered Architecture](#layered-architecture)                    
-3. [Data Flow & Interactions](#data-flow--interactions)             
-4. [Design Patterns Used](#design-patterns-used)                    
-5. [Dependency Injection]()                    
+2. [Layered Architecture](#layered-architecture)                                
+4. [Design Patterns Used](#design-patterns-used)                                      
 6. [Error Handling Architecture](#error-handling-architecture)      
 7. [Security Architecture](#security-architecture)                  
                                                                     
@@ -24,7 +22,7 @@ The Alumni Profile API is a RESTful web service built using CodeIgniter 3 (PHP) 
 
 - *Framework*: CodeIgniter 3.1.13 (PHP 7.4+)
 - *Database*: MySQL with foreign key constraints and indexing
-- *Authentication*: Session-based with secure token verification
+- *Authentication*: Session based with secure token verification
 - *Security*: bcrypt password hashing, CSRF protection, input sanitization
 - *API Format*: RESTful JSON endpoints with consistent error handling
 
@@ -67,14 +65,6 @@ The application follows a 4 layer architecture pattern:
 
 **Location**: `application/controllers/Api/`
 
-**Responsibilies**:
-
-- Handle HTTP requests and responses
-- Parse and validate input data
-- Route requests to appropriate business logic
-- Format and return JSON responses
-- Manage authentication state via sessions
-
 **Components**:
 - `Auth.php` - Authentication endpoints
 - `Profile.php` - Profile management endpoints
@@ -101,13 +91,6 @@ The application follows a 4 layer architecture pattern:
 
 **Location**: `application/models/`
 
-**Responsibility**:
-- Implement business rules and logic
-- Manage data operations and persistence
-- Enforce data integrity constraints
-- Handle domain-specific calculations and validations
-- Provide data access abstraction
-
 **Components**:
 - `User_model.php` - User account management
 - `Profile_model.php` - Profile data management  
@@ -119,12 +102,6 @@ The application follows a 4 layer architecture pattern:
  
 
 **Location**: `application/helpers/`
-
-**Responsibility**:
-- Provide reusable utility functions
-- Cross-cutting concerns (security, validation)
-- Domain-specific helper functions
-- Stateless, pure functions
 
 **Components**:
 - `security_helper.php` - Cryptographic and validation utilities
@@ -141,12 +118,6 @@ validate_university_email()    = Email domain whitelist validation
 ### Layer 4: Data Layer (Database)
 
 **Location**: MySQl Database
-
-**Responsibility**:
-- Persistent data storage
-- Query execution and result handling
-- Foreign key constraint enforcement
-- Data integrity through indexes
 
 **Components**:
 - 10 tables with defined relationships
@@ -254,20 +225,6 @@ verify_user($id)
   → Used by: Auth::verify_email()
 ```
 
-**Data Access Pattern**:
-```php
-// INSERT
-$data = ["email" => $email, "password" => hash, "is_verified" => 0];
-$this->db->insert("users", $data);
-
-// SELECT
-$this->db->get_where("users", ["email" => $email])->row();
-
-// UPDATE
-$this->db->where("id", $id);
-$this->db->update("users", ["is_verified" => 1]);
-```
-
 ---
 
 #### Token Model
@@ -275,19 +232,6 @@ $this->db->update("users", ["is_verified" => 1]);
 **File**: `application/models/Token_model.php`
 
 **Single Responsibility**: Manage verification and reset tokens
-
-**Public Methods**:
-
-```php
-create_verification_token($user_id, $token)
-  → Creates email verification token with 24h expiry
-
-verify_token($token)
-  → Validates and retrieves token if not expired/used
-
-create_reset_token($user_id, $token)
-  → Creates password reset token with 1h expiry
-```
 
 **Token Lifecycle**:
 ```
@@ -302,22 +246,6 @@ Generated → Stored → Sent to User → User clicks link → Validated → Use
 **File**: `application/models/Profile_model.php`
 
 **Single Responsibility**: Manage all user profile data operations
-
-**Public Methods**:
-
-| Method | Responsibility |
-|--------|-----------------|
-| `get_personal_info($user_id)` | Retrieve personal details |
-| `save_personal_info($user_id, $data)` | Create or update personal info |
-| `get_linkedin($user_id)` | Get all LinkedIn profiles |
-| `save_linkedin($user_id, $data)` | Create LinkedIn entry |
-| `update_linkedin($id, $user_id, $data)` | Update LinkedIn entry |
-| `delete_linkedin($id, $user_id)` | Delete LinkedIn entry |
-| `create_record($table, $user_id, $data)` | Generic record creation |
-| `list_records($table, $user_id)` | Generic record listing |
-| `get_record($table, $id, $user_id)` | Generic single record retrieval |
-| `update_record($table, $id, $user_id, $data)` | Generic record update |
-| `delete_record($table, $id, $user_id)` | Generic record deletion |
 
 **Generic CRUD Pattern**:
 ```php
@@ -346,14 +274,6 @@ public function delete_record($table, $id, $user_id) {
     return $this->db->delete($table);
 }
 ```
-
-**Benefits**:
-- Single implementation for multiple tables
-- Consistent behavior across sections
-- Reduced code duplication
-- Easy to test
-- Extensible for new sections
-
 ---
 
 ### Helpers (Utility Layer)
@@ -387,107 +307,6 @@ validate_university_email($email)
 
 ---
 ***==========================================================***: 
-## Data Flow & Interactions
-***==========================================================***: 
-
-### User Registration Flow
-
-```
-1. CLIENT REQUEST
-   POST /api/Auth/register
-   {
-     "email": "user@university.edu",
-     "password": "SecurePass123"
-   }
-
-2. CONTROLLER (Auth::register())
-   ├─ Call getJsonInput() → Parse request body
-   ├─ Extract email, password parameters
-   ├─ Call validate_university_email() → Validate domain
-   ├─ Check password length >= 8
-   ├─ Call User_model::get_by_email() → Check duplicate
-   ├─ Call User_model::create_user() → Create user
-   │  └─ Model hashes password with bcrypt
-   │  └─ Stores in database with is_verified=0
-   ├─ Call generate_secure_token() → Generate token
-   ├─ Call Token_model::create_verification_token()
-   │  └─ Stores token with user_id and 24h expiry
-   └─ Return JSON response with token
-
-3. DATABASE OPERATIONS (Model)
-   ├─ INSERT INTO users (email, password, is_verified)
-   └─ INSERT INTO email_verification_tokens (user_id, token, expires_at)
-
-4. RESPONSE
-   {
-     "message": "Registration successful. Verify email.",
-     "token": "a1b2c3d4e5f6..."
-   }
-```
-
-### Authentication Flow
-
-```
-1. CLIENT REQUEST: POST /api/Auth/login
-   {"email": "user@university.edu", "password": "SecurePass123"}
-
-2. CONTROLLER (Auth::login())
-   ├─ Parse JSON input
-   ├─ Call User_model::get_by_email() → Retrieve user
-   ├─ Verify is_verified == 1
-   ├─ Call password_verify() → Compare passwords
-   ├─ Create session: set_userdata(['user_id', 'email', 'logged_in'])
-   └─ Return success message
-
-3. SESSION STORAGE
-   ├─ Server-side session created
-   ├─ Session ID in client cookie
-   └─ Session timeout: 1800 seconds
-
-4. RESPONSE
-   {"message": "Login successful"}
-
-5. SUBSEQUENT REQUESTS
-   ├─ Client sends session cookie
-   ├─ Controller calls require_auth()
-   ├─ require_auth() retrieves user_id from session
-   ├─ Validates user_id exists
-   └─ Returns user_id or exits with 401
-```
-
-### Profile Data Flow
-
-```
-1. CLIENT REQUEST: GET /api/Profile/get_profile
-
-2. CONTROLLER (Profile::get_profile())
-   ├─ Call require_auth() → Get user_id from session
-   ├─ Call Profile_model::get_personal_info($user_id)
-   ├─ Call Profile_model::get_linkedin($user_id)
-   ├─ Call Profile_model::list_records('user_degrees', $user_id)
-   ├─ Call Profile_model::list_records() for each section
-   ├─ Aggregate results into associative array
-   └─ JSON encode and return
-
-3. DATABASE QUERIES (Models)
-   ├─ SELECT * FROM user_personal_infos WHERE user_id = X
-   ├─ SELECT * FROM user_linkedin_profiles WHERE user_id = X
-   ├─ SELECT * FROM user_degrees WHERE user_id = X
-   ├─ SELECT * FROM user_certifications WHERE user_id = X
-   └─ ... (repeat for each section)
-
-4. RESPONSE
-   {
-     "personal": {...},
-     "linkedin": [{...}],
-     "degrees": [{...}],
-     "certifications": [],
-     ...
-   }
-```
-
----
-***==========================================================***: 
 ## Design Patterns Used
 ***==========================================================***: 
 
@@ -505,62 +324,7 @@ validate_university_email($email)
 
 ---
 
-### 2. Repository Pattern
-
-
-**Implementation**: Models act as repositories for database access
-
-**Example**:
-```php
-// Instead of direct DB calls in controller:
-$user = $this->User_model->get_by_email($email);
-
-// Model encapsulates query:
-public function get_by_email($email) {
-    return $this->db->get_where("users", ["email" => $email])->row();
-}
-```
-
-**Benefits**:
-- Abstraction of persistence mechanism
-- Easy to swap database implementations
-- Testable via mocks
-
----
-
-
-
-
-### 3. Active Record Pattern
-
-**Implementation**: CodeIgniter's Query Builder provides Active Record interface
-
-**Example**:
-```php
-// Insert
-$this->db->insert("users", $data);
-
-// Select
-$this->db->get_where("users", ["email" => $email]);
-
-// Update
-$this->db->where("id", $id)->update("users", $data);
-
-// Delete
-$this->db->where("id", $id)->delete("users");
-```
-
-**Benefits**:
-- SQL injection prevention (parameterized queries)
-- Database abstraction
-- Chainable query building
-
----
-
-
-### 4. Generic CRUD Operations
-
-
+### 2. Generic CRUD Operations
 
 **Implementation**: Profile_model provides generic methods for all profile sections
 

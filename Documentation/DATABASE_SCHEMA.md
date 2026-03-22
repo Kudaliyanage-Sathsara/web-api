@@ -6,12 +6,7 @@ The Alumni Profile API database is built on a relational model designed to manag
 
 **Database Name**: `alumni_db`
 
-**Database Type**: MySQL/MariaDB
-
-**Character Set**: UTF-8 (utf8)
-
-**Collation**: utf8_general_ci
-
+**Database Type**: MySQL
 ---
 
 ## Table of Contents
@@ -27,24 +22,22 @@ The Alumni Profile API database is built on a relational model designed to manag
 
 ## Core Authentication Tables
 
-### 1. `users` Table
+### 1. users Table
 
 Stores core user account information and authentication credentials.
 
-**Purpose**: Central user account table for authentication and identity management
+**Primary Key**: id
 
-**Primary Key**: `id`
+**Schema/query**:
 
-**Schema**:
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | INT | NO | AUTO_INCREMENT | Unique user identifier, primary key |
-| email | VARCHAR(255) | NO | UNIQUE | User's email address, must be unique and university email |
-| password | VARCHAR(255) | NO | NULL | Bcrypt hashed password (60 characters) |
-| is_verified | INT | YES | 0 | Email verification flag (0=not verified, 1=verified) |
-| created_at | TIMESTAMP | NO | CURRENT_TIMESTAMP | Account creation timestamp |
-| updated_at | TIMESTAMP | NO | CURRENT_TIMESTAMP | Last update timestamp, auto-updates |
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    is_verified INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
 **Constraints**:
 - PRIMARY KEY (id)
@@ -55,26 +48,18 @@ Stores core user account information and authentication credentials.
 - Primary key index on id (AUTO_INCREMENT)
 - Unique index on email (speeds up lookups during login/registration)
 
-**Sample Data**:
-```sql
-INSERT INTO users (email, password, is_verified) VALUES
-('john.doe@university.edu', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1),
-('jane.smith@university.edu', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1);
-```
-
 ---
 
-### 2. `email_verification_tokens` Table
+### 2. email_verification_tokens Table
 
 Stores email verification tokens for newly registered users.
-
-**Purpose**: Manages email verification workflow with token-based confirmation
 
 **Primary Key**: `id`
 
 **Foreign Key**: `user_id` → users.id (ON DELETE CASCADE)
 
 **Schema**:
+
 
 | Column | Type | Nullable | Default | Description |
 |--------|------|----------|---------|-------------|
