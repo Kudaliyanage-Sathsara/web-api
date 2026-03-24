@@ -12,9 +12,9 @@ The Alumni Profile API is a RESTful web service built using CodeIgniter 3 (PHP) 
                                                                     
 1. [System Architecture Overview](#system-architecture-overview)    
 2. [Layered Architecture](#layered-architecture)                                
-3. [Design Patterns Architecture](#design-patterns-used)                                      
-4. [Error Handling Architecture](#error-handling-architecture)      
-5. [Security Architecture](#security-architecture)                  
+4. [Design Patterns Used](#design-patterns-used)                                      
+6. [Error Handling Architecture](#error-handling-architecture)      
+7. [Security Architecture](#security-architecture)                  
                                                                     
 ====================================================================    
 
@@ -44,13 +44,7 @@ This documentation provides detailed insights into the system's architecture, de
 
 # Architecture Diagram
 
-
-
-path = (C:\xampp\htdocs\web_api\Documentation\images\Architecturre.png)
-
 ![App Screenshot](images/Architecturre.png)
-
-
 
 **Figure 1**: High-level architecture diagram showing the four-layer structure of the Alumni Profile API. The diagram illustrates how client requests flow through the Presentation Layer (Controllers), Business Logic Layer (Models), Utility Layer (Helpers), and Data Layer (Database), with clear separation of concerns and data flow directions.
 
@@ -369,12 +363,15 @@ function generate_secure_token() {
 $token = generate_secure_token();
 ```
 
+**Benefits**:
+- Reusable across application
+- No object instantiation needed
+- Simple, focused functions
+
 
 ***==========================================================***: 
 ## Error Handling Architecture
 ***==========================================================***: 
-
-
 The Alumni Profile API implements a comprehensive error handling strategy that ensures consistent, secure, and informative error responses across all endpoints. Error handling is implemented at multiple layers to provide appropriate feedback while preventing information leakage.
 
 ### Error Response Format
@@ -420,7 +417,14 @@ if (!$record) {
 }
 ```
 
+### HTTP Status Code Mapping
 
+**Common Status Codes Used**:
+- `200 OK` - Successful operations
+- `400 Bad Request` - Invalid input data
+- `401 Unauthorized` - Authentication required/failed
+- `404 Not Found` - Resource doesn't exist
+- `500 Internal Server Error` - Server-side errors
 
 ### Error Handling Strategy
 
@@ -430,13 +434,110 @@ if (!$record) {
 3. **Database Error Handling**: Manage connection issues, constraint violations
 4. **Security Validation**: Prevent unauthorized access, validate tokens
 
+**Error Propagation**:
+- Errors bubble up from models to controllers
+- Controllers format appropriate responses
+- Sensitive errors are sanitized before client exposure
+- Logging captures detailed error information for debugging
+
+### Security Considerations
+
+**Error Message Sanitization**:
+- No database errors exposed to clients
+- No stack traces in production responses
+- Generic messages for security-related failures
+- Detailed logging for internal monitoring
+
+**Rate Limiting Integration**:
+- Error responses can trigger rate limiting
+- Prevents brute force through error analysis
+- Maintains API stability under attack
+
+### Best Practices Implemented
+
+✓ Consistent error response format
+✓ Appropriate HTTP status codes
+✓ Input validation at entry points
+✓ Sanitized error messages
+✓ Comprehensive error logging
+✓ Graceful degradation
+✓ Client-friendly error descriptions
+
+
+## Extensibility & Scalability
+
+### Adding New Profile Sections
+
+**Current Design**: Generic CRUD methods support unlimited sections
+
+**Steps to add new section**:
+
+1. Create database table with schema
+2. Add entry to $sectionTables mapping
+3. Existing endpoints automatically support new section
+
+**Example**:
+```php
+// Database
+CREATE TABLE user_new_section (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    field1 VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+// Controller mapping
+private $sectionTables = [
+    'new_section' => 'user_new_section',  // ← Add this line
+];
+
+// Endpoints automatically available
+POST /api/Profile/add_section/new_section
+GET /api/Profile/list_section/new_section
+POST /api/Profile/update_section/new_section/{id}
+POST /api/Profile/delete_section/new_section/{id}
+```
+
+---
+
+### Adding New Endpoints
+
+**Structure for new endpoint**:
+
+1. Add public method to Controller
+2. Implement business logic in Model
+3. Return JSON response
+
+**Example**:
+```php
+// In Controller
+public function new_endpoint() {
+    $user_id = $this->require_auth();
+    $input = $this->getJsonInput();
+    
+    $result = $this->SomeModel->perform_operation($user_id, $input);
+    
+    echo json_encode(['message' => 'Success', 'data' => $result]);
+}
+
+// In Model
+public function perform_operation($user_id, $data) {
+    // Implement business logic
+    return $result;
+}
+
+// Endpoint available
+POST /api/SomeController/new_endpoint
+```
+
+
+
+
 
 
 ***==========================================================***: 
 ## Security Architecture
 ***==========================================================***: 
-
-
 The Alumni Profile API implements a comprehensive security architecture with multiple layers of protection to ensure data confidentiality, integrity, and availability.
 
 ### Authentication & Authorization
@@ -470,6 +571,11 @@ The Alumni Profile API implements a comprehensive security architecture with mul
 - URL and date format validation
 - Required field validation with appropriate error responses
 
+**Data Sanitization**:
+- CodeIgniter's input class sanitization
+- Prepared statements prevent SQL injection
+- XSS protection through input filtering
+
 ### Data Protection
 
 **Database Security**:
@@ -489,27 +595,43 @@ The Alumni Profile API implements a comprehensive security architecture with mul
 **Core Security Utilities**:
 ```php
 generate_secure_token()
-  - 64-character hex token from random_bytes(32)
-  - Used for email verification and password reset
+  → 64-character hex token from random_bytes(32)
+  → Used for email verification and password reset
 
 validate_university_email($email)
-  - Domain whitelist validation
-  - Prevents unauthorized registrations
+  → Domain whitelist validation
+  → Prevents unauthorized registrations
 ```
+
+### Threat Mitigation
+
+- **Brute Force Protection**: Account lockout not implemented (consider adding)
+- **Rate Limiting**: Not implemented at API level (consider adding)
+- **HTTPS Enforcement**: Assumed at web server level
+- **Logging**: Security events logged for monitoring
+- **Access Control**: User-scoped data access prevents unauthorized viewing
 
 ### Security Best Practices Implemented
 
-. Password complexity requirements
-. Secure password hashing (bcrypt)
-. Session management
-. Input validation
-. SQL injection prevention
-. XSS protection
-. Secure token generation
-. Email verification workflow
-. Error message sanitization
-. Database constraints
+✓ Password complexity requirements
+✓ Secure password hashing (bcrypt)
+✓ Session management
+✓ Input validation
+✓ SQL injection prevention
+✓ XSS protection
+✓ Secure token generation
+✓ Email verification workflow
+✓ Error message sanitization
+✓ Database constraints
 
 This security architecture provides a solid foundation while remaining extensible for additional security measures as the system grows.
+
+✓ **Clear Separation of Concerns** - Each layer has distinct responsibility
+✓ **Scalability** - Generic patterns support unlimited extensions
+✓ **Maintainability** - Code is organized, documented, and easy to navigate
+✓ **Security** - Input validation, authentication, authorization at multiple levels
+✓ **Testability** - Components can be tested independently
+✓ **Performance** - Optimized queries and caching strategies
+✓ **Extensibility** - New features require minimal code changes
 
 This deliberate architectural design ensures long-term maintainability and supports future growth of the platform.
