@@ -361,7 +361,7 @@ path = (C:\xampp\htdocs\web_api\Documentation\images\Relationship_diagram.png)
 
 ![App Screenshot](images/Relationship_diagram.png)
 
-
+*
 
 
 ```
