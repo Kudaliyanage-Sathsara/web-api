@@ -351,20 +351,17 @@ INSERT INTO user_employment_history
 
 ## Relationships & Constraints
 
-### Entity-Relationship Diagram
-
-```
+# Entity-Relationship Diagram
 
 
 
-path = (C:\xampp\htdocs\web_api\Documentation\images\Relationship_diagram.png) 
+
+
+
 
 ![App Screenshot](images/Relationship_diagram.png)
+path = (C:\xampp\htdocs\web_api\Documentation\images\Relationship_diagram.png) 
 
-*
-
-
-```
 
 ### Foreign Key Relationships
 
