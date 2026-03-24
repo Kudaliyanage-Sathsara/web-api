@@ -6,7 +6,7 @@ The Alumni Profile API database is built on a relational model designed to manag
 
 **Database Name**: `alumni_db`
 
-**Database Type**: MySQL
+**Database Type**: MySQL.
 ---
 
 ## Table of Contents
