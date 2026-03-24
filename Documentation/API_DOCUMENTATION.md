@@ -21,29 +21,32 @@ The Alumni Profile API is a RESTful web service built with CodeIgniter 3 that ma
 
 ---
 
+
+
+
 ## Authentication Endpoints
+
+
+
 
 ### 1. User Registration
 
 Create a new user account with email and password.
 
 **Endpoint**: `POST /api/Auth/register`
+**Test URL :** `POST - http://localhost/web_api/index.php/api/auth/register
+
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
 
 **Request Body**:
 ```json
 {
-  "email": "john.doe@university.edu",
-  "password": "SecurePass123"
+  "email": "sathsara.vx@university.edu",
+  "password": "Secure@Pass123"
 }
 ```
-
-**Request Parameters**:
-- `email` (string, required): University email address (must end with @university.edu or @alumni.university.edu)
-- `password` (string, required): Minimum 8 characters
-
-**Response (201 Created)**:
+**Response**:
 ```json
 {
   "message": "Registration successful. Verify email.",
@@ -60,7 +63,7 @@ Create a new user account with email and password.
 
 // Password too weak
 {
-  "error": "Weak password"
+  "error": "Weak password/Password must include uppercase, lowercase, number, and special character"
 }
 
 // Email already registered
@@ -82,14 +85,17 @@ Create a new user account with email and password.
 
 ---
 
+
+
+
+
 ### 2. Email Verification
 
 Verify user email address using verification token sent during registration.
 
 **Endpoint**: `GET /api/Auth/verify_email?token=TOKEN`
+**Test URL :** `http://localhost/web_api/index.php/api/auth/verify_email?token=token-from-register-response
 
-**Query Parameters**:
-- `token` (string, required): Verification token from registration response
 
 **Response (200 OK)**:
 ```json
@@ -111,11 +117,6 @@ Verify user email address using verification token sent during registration.
 - Token must not be expired (expires_at > NOW())
 - Can only verify once per token
 
-**Side Effects**:
-- Sets users.is_verified=1
-- Marks token as used (used=1)
-- User can now log in
-
 ---
 
 ### 3. User Login
@@ -123,14 +124,15 @@ Verify user email address using verification token sent during registration.
 Authenticate user with email and password, creates server session.
 
 **Endpoint**: `POST /api/Auth/login`
+**Test URL :** ` http://localhost/web_api/index.php/api/auth/login
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
 
 **Request Body**:
 ```json
 {
-  "email": "john.doe@university.edu",
-  "password": "SecurePass123"
+  "email": "sathsara.vx@university.edu",
+  "password": "Secure@Pass123"
 }
 ```
 
@@ -180,6 +182,7 @@ Authenticate user with email and password, creates server session.
 Destroy user session and log out.
 
 **Endpoint**: `POST /api/Auth/logout`
+**Test URL :** ` http://localhost/web_api/index.php/api/auth/logout
 
 **Authentication**: Session required
 
@@ -192,11 +195,6 @@ Destroy user session and log out.
 }
 ```
 
-**Side Effects**:
-- Destroys entire session data
-- Clears user_id, email, logged_in flags
-- User must log in again to access protected endpoints
-
 ---
 
 ### 5. Request Password Reset
@@ -204,18 +202,16 @@ Destroy user session and log out.
 Initiate password reset process for user account.
 
 **Endpoint**: `POST /api/Auth/request_reset`
+**Test URL :** `http://localhost/web_api/index.php/api/auth/request_reset
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
 
 **Request Body**:
 ```json
 {
-  "email": "john.doe@university.edu"
+  "email": "sathsara.vx@university.edu"
 }
 ```
-
-**Request Parameters**:
-- `email` (string, required): User's email address
 
 **Response (200 OK)**:
 ```json
@@ -248,6 +244,7 @@ Initiate password reset process for user account.
 Update user password using reset token.
 
 **Endpoint**: `POST /api/Auth/reset_password`
+**Test URL :** `http://localhost/web_api/index.php/api/auth/reset_password
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
 
@@ -456,7 +453,6 @@ FILE: profile_image (multipart file upload)
 6. Generates public URL using base_url()
 7. Updates or creates user_personal_infos record
 8. Returns public accessible URL
-
 ---
 
 ## Profile Sections
