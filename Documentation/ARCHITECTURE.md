@@ -7,8 +7,6 @@ The Alumni Profile API is a RESTful web service built using CodeIgniter 3 (PHP) 
 ===================================================================
                                                                     
 ## Table of Contents
-
-** **
                                                                     
 1. [System Architecture Overview](#system-architecture-overview)    
 2. [Layered Architecture](#layered-architecture)                                
@@ -531,13 +529,11 @@ POST /api/SomeController/new_endpoint
 ```
 
 
-
-
-
-
 ***==========================================================***: 
 ## Security Architecture
 ***==========================================================***: 
+
+
 The Alumni Profile API implements a comprehensive security architecture with multiple layers of protection to ensure data confidentiality, integrity, and availability.
 
 ### Authentication & Authorization
@@ -595,12 +591,12 @@ The Alumni Profile API implements a comprehensive security architecture with mul
 **Core Security Utilities**:
 ```php
 generate_secure_token()
-  → 64-character hex token from random_bytes(32)
-  → Used for email verification and password reset
+  - 64-character hex token from random_bytes(32)
+  - Used for email verification and password reset
 
 validate_university_email($email)
-  → Domain whitelist validation
-  → Prevents unauthorized registrations
+  - Domain whitelist validation
+   Prevents unauthorized registrations
 ```
 
 ### Threat Mitigation
