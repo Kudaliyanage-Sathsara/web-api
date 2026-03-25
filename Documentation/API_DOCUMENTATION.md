@@ -2,11 +2,9 @@
 
 ## Overview
 
-The Alumni Profile API is a RESTful web service built with CodeIgniter 3 that manages user authentication and comprehensive profile information for alumni networks. The API enforces university email domain restrictions, implements secure authentication with email verification, and provides complete profile management capabilities.
+The Alumni Profile API is a RESTful web service built with CodeIgniter 3 that manages user authentication and comprehensive profile information for alumni profilws. The API enforces university email domain restrictions, implements secure authentication with email verification, and provides complete profile management capabilities.
 
 **Base URL**: `http://localhost/alumni/api/`
-
-**API Version**: v1
 
 ---
 
@@ -21,21 +19,19 @@ The Alumni Profile API is a RESTful web service built with CodeIgniter 3 that ma
 
 ---
 
-
-
-
 ## Authentication Endpoints
 
 
 
-
+***==========================================================***: 
 ### 1. User Registration
+***==========================================================***: 
+
 
 Create a new user account with email and password.
 
 **Endpoint**: `POST /api/Auth/register`
 **Test URL :** `POST - http://localhost/web_api/index.php/api/auth/register
-
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
 
@@ -88,8 +84,11 @@ Create a new user account with email and password.
 
 
 
-
+***==========================================================***: 
 ### 2. Email Verification
+***==========================================================***: 
+
+
 
 Verify user email address using verification token sent during registration.
 
@@ -119,7 +118,13 @@ Verify user email address using verification token sent during registration.
 
 ---
 
+
+
+***==========================================================***: 
 ### 3. User Login
+***==========================================================***: 
+
+
 
 Authenticate user with email and password, creates server session.
 
@@ -177,7 +182,11 @@ Authenticate user with email and password, creates server session.
 
 ---
 
+
+***==========================================================***: 
 ### 4. User Logout
+***==========================================================***: 
+
 
 Destroy user session and log out.
 
@@ -197,7 +206,11 @@ Destroy user session and log out.
 
 ---
 
+
+***==========================================================***: 
 ### 5. Request Password Reset
+***==========================================================***: 
+
 
 Initiate password reset process for user account.
 
@@ -239,7 +252,14 @@ Initiate password reset process for user account.
 
 ---
 
+
+
+***==========================================================***: 
 ### 6. Reset Password
+***==========================================================***: 
+
+
+
 
 Update user password using reset token.
 
@@ -289,7 +309,11 @@ Update user password using reset token.
 
 ## Profile Endpoints
 
+
+***==========================================================***: 
 ### 7. Get Complete User Profile
+***==========================================================***: 
+
 
 Retrieve all profile information for authenticated user.
 
@@ -355,7 +379,12 @@ Retrieve all profile information for authenticated user.
 
 ---
 
+
+***==========================================================***: 
 ### 8. Update Personal Profile
+***==========================================================***: 
+
+
 
 Update user's personal information (name and biography).
 
@@ -399,7 +428,12 @@ Update user's personal information (name and biography).
 
 ---
 
+
+***==========================================================***: 
 ### 9. Upload Profile Image
+***==========================================================***: 
+
+
 
 Upload and store user profile picture.
 
@@ -469,7 +503,13 @@ The following endpoints handle profile sections (degrees, certifications, etc). 
 | short_courses | user_short_courses | title, provider, course_url, completion_date |
 | employment_history | user_employment_history | company, role, start_date, end_date, description |
 
+
+
+***==========================================================***: 
 ### 10. List Section Records
+***==========================================================***: 
+
+
 
 List all records in a profile section.
 
@@ -512,7 +552,11 @@ List all records in a profile section.
 
 ---
 
+
+***==========================================================***: 
 ### 11. Add Section Record
+***==========================================================***: 
+
 
 Create new record in a profile section.
 
@@ -596,7 +640,11 @@ Create new record in a profile section.
 
 ---
 
+
+***==========================================================***: 
 ### 12. Update Section Record
+***==========================================================***: 
+
 
 Update existing record in a profile section.
 
@@ -645,7 +693,11 @@ Update existing record in a profile section.
 
 ---
 
+
+***==========================================================***: 
 ### 13. Delete Section Record
+***==========================================================***: 
+
 
 Remove record from a profile section.
 
@@ -675,7 +727,11 @@ Remove record from a profile section.
 
 ## LinkedIn Profile Management
 
+
+***==========================================================***: 
 ### 14. Add LinkedIn Profile
+***==========================================================***: 
+
 
 Add LinkedIn profile URL and label.
 
@@ -715,7 +771,11 @@ Add LinkedIn profile URL and label.
 
 ---
 
+
+***==========================================================***: 
 ### 15. List LinkedIn Profiles
+***==========================================================***: 
+
 
 Retrieve all LinkedIn profiles for user.
 
@@ -739,7 +799,12 @@ Retrieve all LinkedIn profiles for user.
 
 ---
 
+
+***==========================================================***: 
 ### 16. Update LinkedIn Profile
+***==========================================================***: 
+
+
 
 Update existing LinkedIn profile entry.
 
@@ -774,7 +839,11 @@ Update existing LinkedIn profile entry.
 
 ---
 
+
+***==========================================================***: 
 ### 17. Delete LinkedIn Profile
+***==========================================================***: 
+
 
 Remove LinkedIn profile entry.
 
