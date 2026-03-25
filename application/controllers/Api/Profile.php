@@ -383,7 +383,7 @@ class Profile extends CI_Controller {
         }
 
         $this->Profile_model->create_record($this->sectionTables[$section], $user_id, $data);
-        echo json_encode(['message' => ucfirst(str_replace('_', ' ', $section)) . ' item created']);
+        echo json_encode(['message' => ucfirst(str_replace('_', ' ', $section)) . ' created']);
     }
 
     /**
@@ -405,23 +405,29 @@ class Profile extends CI_Controller {
      * 7. Return success message
      * 
      * @param string $section Section name from sectionTables mapping
-     * @param int $id Record ID to update
      * @return void Outputs JSON response with message or error
      */
-    public function update_section($section, $id) {
+    public function update_section($section) {
         $user_id = $this->require_auth();
         if (!isset($this->sectionTables[$section])) {
             header('HTTP/1.1 404 Not Found');
             echo json_encode(['error' => 'Unknown section']); return;
         }
 
+        $input = $this->getJsonInput();
+        $id = $this->input->post('id', TRUE) ?: ($input['id'] ?? null);
+
+        if (!$id) {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(['error' => ' ID is required']); return;
+        }
+
         $record = $this->Profile_model->get_record($this->sectionTables[$section], $id, $user_id);
         if (!$record) {
             header('HTTP/1.1 404 Not Found');
-            echo json_encode(['error' => 'Item not found']); return;
+            echo json_encode(['error' => ' not found']); return;
         }
 
-        $input = $this->getJsonInput();
         $data = [];
 
         // Merge existing and provided fields, skipping system fields.
@@ -450,7 +456,7 @@ class Profile extends CI_Controller {
         }
 
         $this->Profile_model->update_record($this->sectionTables[$section], $id, $user_id, $data);
-        echo json_encode(['message' => ucfirst(str_replace('_', ' ', $section)) . ' item updated']);
+        echo json_encode(['message' => ucfirst(str_replace('_', ' ', $section)) . '  updated']);
     }
 
     /**
@@ -460,24 +466,31 @@ class Profile extends CI_Controller {
      * to authenticated user before deletion.
      * 
      * @param string $section Section name from sectionTables mapping
-     * @param int $id Record ID to delete
      * @return void Outputs JSON response with message or error
      */
-    public function delete_section($section, $id) {
+    public function delete_section($section) {
         $user_id = $this->require_auth();
         if (!isset($this->sectionTables[$section])) {
             header('HTTP/1.1 404 Not Found');
             echo json_encode(['error' => 'Unknown section']); return;
         }
 
+        $input = $this->getJsonInput();
+        $id = $this->input->post('id', TRUE) ?: ($input['id'] ?? null);
+
+        if (!$id) {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(['error' => ' ID is required']); return;
+        }
+
         $record = $this->Profile_model->get_record($this->sectionTables[$section], $id, $user_id);
         if (!$record) {
             header('HTTP/1.1 404 Not Found');
-            echo json_encode(['error' => 'Item not found']); return;
+            echo json_encode(['error' => ' not found']); return;
         }
 
         $this->Profile_model->delete_record($this->sectionTables[$section], $id, $user_id);
-        echo json_encode(['message' => ucfirst(str_replace('_', ' ', $section)) . ' item deleted']);
+        echo json_encode(['message' => ucfirst(str_replace('_', ' ', $section)) . '  deleted']);
     }
 
     // ========================================================================
@@ -524,15 +537,21 @@ class Profile extends CI_Controller {
      * 
      * Updates an existing LinkedIn profile entry. Allows updating
      * either URL, label, or both. Validates URL if provided.
+     * Requires ID in request body.
      * 
-     * @param int $id LinkedIn profile record ID
      * @return void Outputs JSON response with message or error
      */
-    public function update_linkedin($id) {
+    public function update_linkedin() {
         $user_id = $this->require_auth();
         $input = $this->getJsonInput();
+        $id = $this->input->post('id', TRUE) ?: ($input['id'] ?? null);
         $url = $this->input->post('url', TRUE) ?: ($input['url'] ?? null);
         $label = $this->input->post('label', TRUE) ?: ($input['label'] ?? null);
+
+        if (!$id) {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(['error' => ' ID is required']); return;
+        }
 
         if ($url && !$this->is_valid_url($url)) {
             echo json_encode(['error' => 'Invalid LinkedIn URL']); return;
@@ -551,12 +570,20 @@ class Profile extends CI_Controller {
      * Delete LinkedIn Profile
      * 
      * Removes a LinkedIn profile entry.
+     * Requires ID in request body.
      * 
-     * @param int $id LinkedIn profile record ID
      * @return void Outputs JSON response with message or error
      */
-    public function delete_linkedin($id) {
+    public function delete_linkedin() {
         $user_id = $this->require_auth();
+        $input = $this->getJsonInput();
+        $id = $this->input->post('id', TRUE) ?: ($input['id'] ?? null);
+
+        if (!$id) {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(['error' => ' ID is required']); return;
+        }
+
         if (!$this->Profile_model->get_linkedin_by_id($id, $user_id)) {
             header('HTTP/1.1 404 Not Found');
             echo json_encode(['error' => 'LinkedIn entry not found']); return;

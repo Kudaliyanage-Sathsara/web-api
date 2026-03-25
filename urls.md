@@ -134,9 +134,10 @@ Response:
 [ {"id":1,"user_id":1,"url":"https://linkedin.com/in/john","label":"Personal","created_at":"...","updated_at":"..."} ]
 
 ### 3.3 Update LinkedIn
-POST http://localhost/web_api/index.php/api/profile/update_linkedin/{id}
+POST http://localhost/web_api/index.php/api/profile/update_linkedin
 Body (JSON):
 {
+  "id": 1,
   "url":"https://linkedin.com/in/john-doe",
   "label":"Work"
 }
@@ -147,7 +148,11 @@ Response:
 }
 
 ### 3.4 Delete LinkedIn
-POST http://localhost/web_api/index.php/api/profile/delete_linkedin/{id}
+POST http://localhost/web_api/index.php/api/profile/delete_linkedin
+Body (JSON):
+{
+  "id": 1
+}
 
 Response:
 {
