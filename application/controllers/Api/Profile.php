@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * User Profile Controller
  * 
- * Manages user profile information and educational/professional credentials.
+ * Manages user profile information and educational and professional credentials.
  * Handles creation, reading, updating, and deletion (CRUD) of profile sections
  * including personal info, degrees, certifications, licenses, courses, and employment.
  * All endpoints require authentication.
@@ -41,8 +41,7 @@ class Profile extends CI_Controller {
     /**
      * Parse JSON request body into an array.
      * 
-     * Provides cached JSON parsing for request bodies. Uses static variable caching
-     * to avoid redundant parsing of php://input stream. Allows API to accept both
+     * Provides cached JSON parsing for request bodies. Uses static variable caching to avoid redundant parsing of php://input stream. Allows API to accept both
      * application/json and application/x-www-form-urlencoded content types.
      * 
      * @return array Decoded JSON data as associative array, empty array if invalid
