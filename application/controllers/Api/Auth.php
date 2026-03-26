@@ -77,8 +77,8 @@ class Auth extends CI_Controller {
      * @return void Outputs JSON response with message or error
      * 
      * Request (JSON or Form):
-     *   email: string (must be university.edu or alumni.university.edulony)
-     *   password: string (minimum 8 characters)
+     * email: string (must be university.edu or alumni.university.edulony)
+     * password: string (minimum 8 characters)
      * 
      * Response Success :
      *   {
@@ -140,16 +140,14 @@ class Auth extends CI_Controller {
 
     /**
      * Email Verification Endpoint.
-     * 
      * Validates an emails verification token and marks the user account as verified.
      * Tokens expire after 24 hours and can only be used once. This endpoint is called
      * by the user after clicking a verification link or manually providing their tokenss.
-     * 
      * Token Verification Logic:
-     * 1. Retrieve token from query parameter (?token=xyz12345)
+     * 1. Retrieve token from query parameter (?token=abc1234)
      * 2. Query emailverificationtokens table for matching token,
-     * 3. Check if token has been used (used != 1)
-     * 4. Verify token hasn't expired (expires_at > NOW())
+     * 3. Check if token has been used.
+     * 4. Verify token hasn't expired.
      * 5. If valid: update users.is_verified=1 and mark token as used
      * 6. If invalid/expired: reject with error message
      * 
@@ -182,10 +180,8 @@ class Auth extends CI_Controller {
 
     /**
      * User Login Endpoint
-     * 
      * Authenticates user with email and password credentials. Creates a server-side
      * session upon successful authentication. Email must be verified before login is allowed.
-     * 
      * Authentication model:
      * 1. Extract email and password from request.
      * 2. Query database for user record with matching email.
@@ -193,11 +189,10 @@ class Auth extends CI_Controller {
      * 4. Compare submitted password against stored bcrypt hash
      * 5. If all checks pass: create session with user_id, email, logged_in flag
      * 6. Return success message
-     * 
      * Security Considerations:
-     * - Passwords are compared using password_verify() (bcrypt comparison)
-     * - Session timeout is configured in config/config.php
-     * - Same error message for "user not found" and "invalid password" prevents user enumeration
+     * 1 Passwords are compared using password_verify() (bcrypt comparison)
+     * 2 Session timeout is configured in config/config.php
+     * 3 Same error message for "user not found" and "invalid password" prevents user enumeration
      * 
      * @return void Outputs JSON response with message or error
      * 
@@ -239,7 +234,6 @@ class Auth extends CI_Controller {
 
     /**
      * User Logout Endpoint
-     * 
      * Destroys the current user session and logs out the user.
      * This clears all session data including user_id, email, and logged_in flag.
      * 
@@ -265,7 +259,6 @@ class Auth extends CI_Controller {
      * Initiates password reset process by generating a reset token and storing it
      * in the database with a 1 hr expiration. In production, the token should be
      * sent to the user's email with a reset link.
-     * 
      * Password Reset Flow:
      * 1. Extract email from request
      * 2. Query database for user with matching email
@@ -275,7 +268,7 @@ class Auth extends CI_Controller {
      * 6. Return token to client 
      * 
      * Security Considerations:
-     * - Token expires after 1 hour to limit attack window
+     *  Token expires after 1 hour to limit attack window
      * - Tokens can only be used once to prevent replay attacks
      * - Token length is 64 characters (256 bits) for strong security
      * 
@@ -310,13 +303,12 @@ class Auth extends CI_Controller {
         echo json_encode(["message"=>"Reset email sent","token"=>$token]);
     }
 
-    // ========================================================================
+    
     // PASSWORD RESET
-    // ========================================================================
+    
 
     /**
      * Reset Password Endpoint
-     * 
      * Validates reset token and updates user password if token is valid and not expired.
      * This endpoint should only be called after a reset token has been generated and
      * confirmed by the user (typically via email link).
@@ -324,8 +316,8 @@ class Auth extends CI_Controller {
      * Password Reset Validation & Execution:
      * 1. Extract reset token and new password from request
      * 2. Query password_reset_tokens table for matching token
-     * 3. Verify token hasn't been used (used != 1)
-     * 4. Verify token hasn't expired (expires_at > NOW())
+     * 3. Verify token hasn't been used .
+     * 4. Verify token hasn't expired .
      * 5. Hash new password using bcrypt (PASSWORD_BCRYPT)
      * 6. Update user record with new password hash
      * 7. Mark token as used (used=1) to prevent reuse
@@ -334,7 +326,7 @@ class Auth extends CI_Controller {
      * Security Considerations:
      * - Passwords are hashed using bcrypt with PHP's PASSWORD_BCRYPT algorithm
      * - Tokens can only be used once to prevent replay attacks
-     * - Expired tokens are rejected (1 hour window)
+     * - Expired tokens are rejected.
      * - Password requirements should be enforced before this endpoint
      * 
      * @return void Outputs JSON response with message or error
