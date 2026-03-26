@@ -31,6 +31,7 @@ The Alumni Profile API is a RESTful web service built with CodeIgniter 3 that ma
 Create a new user account with email and password.
 
 **Endpoint**: `POST /api/Auth/register`
+
 **Test URL :** `POST - http://localhost/web_api/index.php/api/auth/register
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
@@ -59,7 +60,7 @@ Create a new user account with email and password.
 
 // Password too weak
 {
-  "error": "Weak password/Password must include uppercase, lowercase, number, and special character"
+  "error": "Weak password or Password must include uppercase, lowercase, number, and special character"
 }
 
 // Email already registered
@@ -89,10 +90,10 @@ Create a new user account with email and password.
 ***==========================================================***: 
 
 
-
 Verify user email address using verification token sent during registration.
 
 **Endpoint**: `GET /api/Auth/verify_email?token=TOKEN`
+
 **Test URL :** `http://localhost/web_api/index.php/api/auth/verify_email?token=token-from-register-response
 
 
@@ -113,7 +114,6 @@ Verify user email address using verification token sent during registration.
 **Token Validation**:
 - Token must exist in email_verification_tokens table
 - Token must have used=0 (not yet used)
-- Token must not be expired (expires_at > NOW())
 - Can only verify once per token
 
 ---
@@ -125,10 +125,10 @@ Verify user email address using verification token sent during registration.
 ***==========================================================***: 
 
 
-
 Authenticate user with email and password, creates server session.
 
 **Endpoint**: `POST /api/Auth/login`
+
 **Test URL :** ` http://localhost/web_api/index.php/api/auth/login
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
@@ -140,10 +140,6 @@ Authenticate user with email and password, creates server session.
   "password": "Secure@Pass123"
 }
 ```
-
-**Request Parameters**:
-- `email` (string, required): User's email address
-- `password` (string, required): User's password
 
 **Response (200 OK)**:
 ```json
@@ -178,7 +174,6 @@ Authenticate user with email and password, creates server session.
 **Session Creation**:
 - Sets session userdata: user_id, email, logged_in=true
 - Session timeout: 1800 seconds (30 minutes) configurable in config.php
-- Uses PHP native sessions via CodeIgniter Session library
 
 ---
 
@@ -191,6 +186,7 @@ Authenticate user with email and password, creates server session.
 Destroy user session and log out.
 
 **Endpoint**: `POST /api/Auth/logout`
+
 **Test URL :** ` http://localhost/web_api/index.php/api/auth/logout
 
 **Authentication**: Session required
@@ -215,6 +211,7 @@ Destroy user session and log out.
 Initiate password reset process for user account.
 
 **Endpoint**: `POST /api/Auth/request_reset`
+
 **Test URL :** `http://localhost/web_api/index.php/api/auth/request_reset
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
@@ -246,9 +243,6 @@ Initiate password reset process for user account.
 - Stored in password_reset_tokens table
 - Expires after 1 hour (3600 seconds)
 - Can only be used once (used flag)
-- Associated with user_id for security
-
-**Production Note**: In production, send token via email instead of returning in response.
 
 ---
 
@@ -264,6 +258,7 @@ Initiate password reset process for user account.
 Update user password using reset token.
 
 **Endpoint**: `POST /api/Auth/reset_password`
+
 **Test URL :** `http://localhost/web_api/index.php/api/auth/reset_password
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
@@ -275,10 +270,6 @@ Update user password using reset token.
   "password": "NewSecurePass456"
 }
 ```
-
-**Request Parameters**:
-- `token` (string, required): Reset token from request_reset endpoint
-- `password` (string, required): New password for user account
 
 **Response (200 OK)**:
 ```json
@@ -318,6 +309,8 @@ Update user password using reset token.
 Retrieve all profile information for authenticated user.
 
 **Endpoint**: `GET /api/Profile/get_profile`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/get_profile`
 
 **Authentication**: Session required (must be logged in)
 
@@ -390,6 +383,8 @@ Update user's personal information (name and biography).
 
 **Endpoint**: `POST /api/Profile/update_profile`
 
+**Test URL :** `http://localhost/web_api/index.php/api/profile/update_profile`
+
 **Authentication**: Session required
 
 **Content-Type**: `application/json` or `application/x-www-form-urlencoded`
@@ -438,6 +433,8 @@ Update user's personal information (name and biography).
 Upload and store user profile picture.
 
 **Endpoint**: `POST /api/Profile/upload_profile_image`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/upload_profile_image`
 
 **Authentication**: Session required
 
@@ -515,6 +512,8 @@ List all records in a profile section.
 
 **Endpoint**: `GET /api/Profile/list_section/{section}`
 
+**Test URL :** `http://localhost/web_api/index.php/api/profile/list_section/{section}`
+
 **Authentication**: Session required
 
 **URL Parameters**:
@@ -561,6 +560,8 @@ List all records in a profile section.
 Create new record in a profile section.
 
 **Endpoint**: `POST /api/Profile/add_section/{section}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/add_section/{section}`
 
 **Authentication**: Session required
 
@@ -650,6 +651,8 @@ Update existing record in a profile section.
 
 **Endpoint**: `POST /api/Profile/update_section/{section}/{id}`
 
+**Test URL :** `http://localhost/web_api/index.php/api/profile/update_section/{section}/{id}`
+
 **Authentication**: Session required
 
 **URL Parameters**:
@@ -703,6 +706,8 @@ Remove record from a profile section.
 
 **Endpoint**: `POST /api/Profile/delete_section/{section}/{id}`
 
+**Test URL :** `http://localhost/web_api/index.php/api/profile/delete_section/{section}/{id}`
+
 **Authentication**: Session required
 
 **URL Parameters**:
@@ -736,6 +741,8 @@ Remove record from a profile section.
 Add LinkedIn profile URL and label.
 
 **Endpoint**: `POST /api/Profile/add_linkedin`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/add_linkedin`
 
 **Authentication**: Session required
 
@@ -781,6 +788,8 @@ Retrieve all LinkedIn profiles for user.
 
 **Endpoint**: `GET /api/Profile/list_linkedin`
 
+**Test URL :** `http://localhost/web_api/index.php/api/profile/list_linkedin`
+
 **Authentication**: Session required
 
 **Response (200 OK)**:
@@ -809,6 +818,8 @@ Retrieve all LinkedIn profiles for user.
 Update existing LinkedIn profile entry.
 
 **Endpoint**: `POST /api/Profile/update_linkedin/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/update_linkedin/{id}`
 
 **Authentication**: Session required
 
@@ -848,6 +859,8 @@ Update existing LinkedIn profile entry.
 Remove LinkedIn profile entry.
 
 **Endpoint**: `POST /api/Profile/delete_linkedin/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/delete_linkedin/{id}`
 
 **Authentication**: Session required
 
