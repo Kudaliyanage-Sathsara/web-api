@@ -4,8 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Authentication Controller
  * 
- * Handles user authentication operations including registration, login, email verification,
- * and password reset. Uses secure token-based verification for email and password recovery.
+ * Handles user authentication operations including registration, login, email verification,and password reset. Uses secure tokens based verification for email and password recovery.
  * 
  * @property CI_Input $input
  * @property CI_DB_query_builder $db
@@ -22,25 +21,23 @@ class Auth extends CI_Controller {
         $this->load->model('Token_model');
     }
 
-    /**
-     * Parse JSON request body into an array.
-     * 
-     * This method provides a caching layer for JSON parsing to avoid redundant parsing
-     * of the raw request body. It works alongside traditional form POST data, allowing
-     * the API to accept both application/json and application/x-www-form-urlencoded
-     * content types. The static caching ensures multiple calls return the same parsed
-     * data without re-parsing.
-     * 
-     * Algorithm:
-     * 1. Check if JSON has already been parsed (static cache)
-     * 2. If cached, return the cached value
-     * 3. Otherwise, read the raw request body from php://input
-     * 4. Trim whitespace and handle null values
-     * 5. Attempt JSON decode with associative array mode
-     * 6. Return empty array if decoding fails (invalid JSON)
-     * 
-     * @return array Decoded JSON data as associative array, or empty array if invalid
-     */
+   /**
+ * Get JSON data from the request body.
+ *
+ * This function reads JSON data sent to the API and converts it into an array.
+ * It also stores the result so the JSON is only parsed once, making it faster
+ * if the function is called multiple times.
+ *
+ * How it works:
+ * 1. Check if JSON data is already stored
+ * 2. If yes, return the stored data
+ * 3. If not, read the raw request body
+ * 4. Remove extra spaces
+ * 5. Convert JSON into an array
+ * 6. If JSON is invalid, return an empty array
+ *
+ * @return array JSON data as an array or empty array if invalid
+ */
     protected function getJsonInput()
     {
         static $json;
