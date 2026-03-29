@@ -77,7 +77,7 @@ Stores password reset tokens for account recovery.
 
 **Primary Key**: `id`
 
-**Foreign Key**: `user_id` → users.id (ON DELETE CASCADE)
+**Foreign Key**: `user_id` = users.id (ON DELETE CASCADE)
 
 **Constraints**:
 - PRIMARY KEY (id)
@@ -113,7 +113,7 @@ Stores basic personal profile information for each user.
 
 **Primary Key**: `id`
 
-**Foreign Key**: `user_id` → users.id (ON DELETE CASCADE)
+**Foreign Key**: `user_id` = users.id (ON DELETE CASCADE)
 
 **Constraints**:
 - PRIMARY KEY (id)

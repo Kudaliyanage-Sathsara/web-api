@@ -397,10 +397,6 @@ Update user's personal information (name and biography).
 }
 ```
 
-**Request Parameters**:
-- `full_name` (string, optional): User's full name
-- `biography` (string, optional): User's biographical information
-
 **Response (200 OK)**:
 ```json
 {
