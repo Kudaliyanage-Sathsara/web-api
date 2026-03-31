@@ -13,9 +13,14 @@ The Alumni Profile API is a RESTful web service built with CodeIgniter 3 that ma
 1. [Authentication Endpoints](#authentication-endpoints)
 2. [Profile Endpoints](#profile-endpoints)
 3. [Profile Sections](#profile-sections)
-4. [Response Formats](#response-formats)
-5. [Error Handling](#error-handling)
-6. [Rate Limiting](#rate-limiting)
+4. [LinkedIn Profile Management](#linkedin-profile-management)
+5. [Degrees Management](#degrees-management)
+6. [Certifications Management](#certifications-management)
+7. [Licenses Management](#licenses-management)
+8. [Employment History Management](#employment-history-management)
+9. [Response Formats](#response-formats)
+10. [Error Handling](#error-handling)
+11. [Rate Limiting](#rate-limiting)
 
 ---
 
@@ -877,7 +882,616 @@ Remove LinkedIn profile entry.
 }
 ```
 
+---
 
+## Degrees Management
+
+
+***==========================================================***: 
+### 18. Add Degree
+***==========================================================***: 
+
+
+Add a new degree to user profile.
+
+**Endpoint**: `POST /api/Profile/add_section/degrees`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/add_section/degrees`
+
+**Authentication**: Session required
+
+**Content-Type**: `application/json` or `application/x-www-form-urlencoded`
+
+**Request Body**:
+```json
+{
+  "institution": "University of Technology",
+  "degree": "Bachelor of Science",
+  "field": "Computer Science",
+  "degree_url": "https://example.com/degree-verification",
+  "completion_date": "2020-05-30"
+}
+```
+
+**Request Parameters**:
+- `institution` (string, required): University or institution name
+- `degree` (string, required): Degree type (e.g., Bachelor of Science, Master of Arts)
+- `field` (string, optional): Field of study or major
+- `degree_url` (string, optional): URL to degree verification
+- `completion_date` (string, optional): Graduation date in YYYY-MM-DD format
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Degrees item created"
+}
+```
+
+**Error Responses (400 Bad Request)**:
+```json
+// Missing required field
+{
+  "error": "Institution and degree are required"
+}
+
+// Invalid URL
+{
+  "error": "Invalid degree URL"
+}
+
+// Invalid date format
+{
+  "error": "Invalid completion date, use YYYY-MM-DD"
+}
+```
+
+---
+
+
+***==========================================================***: 
+### 19. Update Degree
+***==========================================================***: 
+
+
+Update existing degree record.
+
+**Endpoint**: `POST /api/Profile/update_section/degrees/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/update_section/degrees/{id}`
+
+**Authentication**: Session required
+
+**URL Parameters**:
+- `id` (integer, required): Degree record ID
+
+**Request Body**:
+```json
+{
+  "institution": "University of Technology",
+  "degree": "Master of Science",
+  "field": "Advanced Computer Science",
+  "degree_url": "https://example.com/degree-verification",
+  "completion_date": "2022-05-30"
+}
+```
+
+**Update Behavior**:
+- All fields are optional
+- Provided fields overwrite existing values
+- Omitted fields retain their current values
+- Cannot modify: id, user_id, created_at
+- Cannot modify: updated_at (auto-updated)
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Degrees item updated"
+}
+```
+
+**Error Responses (400/404)**:
+```json
+// Record not found or doesn't belong to user
+{
+  "error": "Item not found"
+}
+
+// Validation error
+{
+  "error": "Invalid degree URL"
+}
+```
+
+---
+
+
+***==========================================================***: 
+### 20. Delete Degree
+***==========================================================***: 
+
+
+Remove degree from user profile.
+
+**Endpoint**: `POST /api/Profile/delete_section/degrees/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/delete_section/degrees/{id}`
+
+**Authentication**: Session required
+
+**URL Parameters**:
+- `id` (integer, required): Degree record ID to delete
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Degrees item deleted"
+}
+```
+
+**Error Response (404 Not Found)**:
+```json
+{
+  "error": "Item not found"
+}
+```
+
+---
+
+## Certifications Management
+
+
+***==========================================================***: 
+### 21. Add Certification
+***==========================================================***: 
+
+
+Add a new certification to user profile.
+
+**Endpoint**: `POST /api/Profile/add_section/certifications`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/add_section/certifications`
+
+**Authentication**: Session required
+
+**Content-Type**: `application/json` or `application/x-www-form-urlencoded`
+
+**Request Body**:
+```json
+{
+  "title": "AWS Certified Solutions Architect",
+  "provider": "Amazon Web Services",
+  "cert_url": "https://aws.amazon.com/certification/cert-details",
+  "completion_date": "2024-01-15"
+}
+```
+
+**Request Parameters**:
+- `title` (string, required): Certification title
+- `provider` (string, optional): Certification provider
+- `cert_url` (string, optional): URL to certification details
+- `completion_date` (string, optional): Completion date in YYYY-MM-DD format
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Certifications item created"
+}
+```
+
+**Error Responses (400 Bad Request)**:
+```json
+// Missing required field
+{
+  "error": "Title is required"
+}
+
+// Invalid URL
+{
+  "error": "Invalid cert URL"
+}
+
+// Invalid date format
+{
+  "error": "Invalid completion date, use YYYY-MM-DD"
+}
+```
+
+---
+
+
+***==========================================================***: 
+### 22. Update Certification
+***==========================================================***: 
+
+
+Update existing certification record.
+
+**Endpoint**: `POST /api/Profile/update_section/certifications/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/update_section/certifications/{id}`
+
+**Authentication**: Session required
+
+**URL Parameters**:
+- `id` (integer, required): Certification record ID
+
+**Request Body**:
+```json
+{
+  "title": "AWS Certified Solutions Architect - Associate",
+  "provider": "Amazon Web Services",
+  "cert_url": "https://aws.amazon.com/certification/cert-details",
+  "completion_date": "2024-01-15"
+}
+```
+
+**Update Behavior**:
+- All fields are optional
+- Provided fields overwrite existing values
+- Omitted fields retain their current values
+- Cannot modify: id, user_id, created_at
+- Cannot modify: updated_at (auto-updated)
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Certifications item updated"
+}
+```
+
+**Error Responses (400/404)**:
+```json
+// Record not found or doesn't belong to user
+{
+  "error": "Item not found"
+}
+
+// Validation error
+{
+  "error": "Invalid cert URL"
+}
+```
+
+---
+
+
+***==========================================================***: 
+### 23. Delete Certification
+***==========================================================***: 
+
+
+Remove certification from user profile.
+
+**Endpoint**: `POST /api/Profile/delete_section/certifications/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/delete_section/certifications/{id}`
+
+**Authentication**: Session required
+
+**URL Parameters**:
+- `id` (integer, required): Certification record ID to delete
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Certifications item deleted"
+}
+```
+
+**Error Response (404 Not Found)**:
+```json
+{
+  "error": "Item not found"
+}
+```
+
+---
+
+## Licenses Management
+
+
+***==========================================================***: 
+### 24. Add License
+***==========================================================***: 
+
+
+Add a new professional license to user profile.
+
+**Endpoint**: `POST /api/Profile/add_section/licenses`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/add_section/licenses`
+
+**Authentication**: Session required
+
+**Content-Type**: `application/json` or `application/x-www-form-urlencoded`
+
+**Request Body**:
+```json
+{
+  "title": "Professional Engineer License",
+  "issuer": "State Board of Professional Engineers",
+  "license_url": "https://www.ncees.org/license-verification",
+  "completion_date": "2023-06-20"
+}
+```
+
+**Request Parameters**:
+- `title` (string, required): License title
+- `issuer` (string, optional): License issuing authority
+- `license_url` (string, optional): URL to license verification
+- `completion_date` (string, optional): Issue or completion date in YYYY-MM-DD format
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Licenses item created"
+}
+```
+
+**Error Responses (400 Bad Request)**:
+```json
+// Missing required field
+{
+  "error": "Title is required"
+}
+
+// Invalid URL
+{
+  "error": "Invalid license URL"
+}
+
+// Invalid date format
+{
+  "error": "Invalid completion date, use YYYY-MM-DD"
+}
+```
+
+---
+
+
+***==========================================================***: 
+### 25. Update License
+***==========================================================***: 
+
+
+Update existing professional license record.
+
+**Endpoint**: `POST /api/Profile/update_section/licenses/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/update_section/licenses/{id}`
+
+**Authentication**: Session required
+
+**URL Parameters**:
+- `id` (integer, required): License record ID
+
+**Request Body**:
+```json
+{
+  "title": "Professional Engineer License - Renewed",
+  "issuer": "State Board of Professional Engineers",
+  "license_url": "https://www.ncees.org/license-verification",
+  "completion_date": "2023-06-20"
+}
+```
+
+**Update Behavior**:
+- All fields are optional
+- Provided fields overwrite existing values
+- Omitted fields retain their current values
+- Cannot modify: id, user_id, created_at
+- Cannot modify: updated_at (auto-updated)
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Licenses item updated"
+}
+```
+
+**Error Responses (400/404)**:
+```json
+// Record not found or doesn't belong to user
+{
+  "error": "Item not found"
+}
+
+// Validation error
+{
+  "error": "Invalid license URL"
+}
+```
+
+---
+
+
+***==========================================================***: 
+### 26. Delete License
+***==========================================================***: 
+
+
+Remove professional license from user profile.
+
+**Endpoint**: `POST /api/Profile/delete_section/licenses/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/delete_section/licenses/{id}`
+
+**Authentication**: Session required
+
+**URL Parameters**:
+- `id` (integer, required): License record ID to delete
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Licenses item deleted"
+}
+```
+
+**Error Response (404 Not Found)**:
+```json
+{
+  "error": "Item not found"
+}
+```
+
+---
+
+## Employment History Management
+
+
+***==========================================================***: 
+### 27. Add Employment History
+***==========================================================***: 
+
+
+Add a new employment record to user profile.
+
+**Endpoint**: `POST /api/Profile/add_section/employment_history`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/add_section/employment_history`
+
+**Authentication**: Session required
+
+**Content-Type**: `application/json` or `application/x-www-form-urlencoded`
+
+**Request Body**:
+```json
+{
+  "company": "Tech Innovation Corp",
+  "role": "Senior Software Engineer",
+  "start_date": "2021-03-15",
+  "end_date": null,
+  "description": "Led development of cloud-based microservices architecture and mentored junior developers"
+}
+```
+
+**Request Parameters**:
+- `company` (string, required): Company name
+- `role` (string, required): Job title/position
+- `start_date` (string, required): Employment start date in YYYY-MM-DD format
+- `end_date` (string, optional): Employment end date in YYYY-MM-DD format (null for current employment)
+- `description` (string, optional): Job description or responsibilities
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Employment history item created"
+}
+```
+
+**Error Responses (400 Bad Request)**:
+```json
+// Missing required field
+{
+  "error": "Company and role are required"
+}
+
+// Invalid date format
+{
+  "error": "Invalid start_date, use YYYY-MM-DD"
+}
+
+// Invalid date logic
+{
+  "error": "End date cannot be before start date"
+}
+```
+
+**Notes**:
+- `end_date` can be null for current/ongoing employment
+- `start_date` is mandatory
+- Date format must be YYYY-MM-DD (ISO 8601)
+
+---
+
+
+***==========================================================***: 
+### 28. Update Employment History
+***==========================================================***: 
+
+
+Update existing employment record.
+
+**Endpoint**: `POST /api/Profile/update_section/employment_history/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/update_section/employment_history/{id}`
+
+**Authentication**: Session required
+
+**URL Parameters**:
+- `id` (integer, required): Employment history record ID
+
+**Request Body**:
+```json
+{
+  "role": "Lead Software Engineer",
+  "end_date": "2024-01-31",
+  "description": "Led development of cloud-based microservices architecture, mentored junior developers, and drove architectural decisions"
+}
+```
+
+**Update Behavior**:
+- All fields are optional
+- Provided fields overwrite existing values
+- Omitted fields retain their current values
+- Cannot modify: id, user_id, created_at
+- Cannot modify: updated_at (auto-updated)
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Employment history item updated"
+}
+```
+
+**Error Responses (400/404)**:
+```json
+// Record not found or doesn't belong to user
+{
+  "error": "Item not found"
+}
+
+// Validation error
+{
+  "error": "Invalid end_date, use YYYY-MM-DD"
+}
+```
+
+---
+
+
+***==========================================================***: 
+### 29. Delete Employment History
+***==========================================================***: 
+
+
+Remove employment record from user profile.
+
+**Endpoint**: `POST /api/Profile/delete_section/employment_history/{id}`
+
+**Test URL :** `http://localhost/web_api/index.php/api/profile/delete_section/employment_history/{id}`
+
+**Authentication**: Session required
+
+**URL Parameters**:
+- `id` (integer, required): Employment history record ID to delete
+
+**Response (200 OK)**:
+```json
+{
+  "message": "Employment history item deleted"
+}
+```
+
+**Error Response (404 Not Found)**:
+```json
+{
+  "error": "Item not found"
+}
+```
+
+---
 
 ## Security Considerations
 
