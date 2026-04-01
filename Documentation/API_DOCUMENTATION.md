@@ -1519,6 +1519,3 @@ Remove employment record from user profile.
 - URL format validation
 - Date format validation (YYYY-MM-DD)
 
-## Support & Feedback
-
-For issues, bugs, or feature requests, please contact the development team or submit an issue to the project repository.
