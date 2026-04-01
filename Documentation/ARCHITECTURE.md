@@ -564,7 +564,7 @@ The Alumni Profile API implements a comprehensive security architecture with mul
 
 **Request Validation**:
 - JSON input parsing with fallback to form data
-- Email domain whitelist validation (university.edu, alumni.university.edu)
+- Email domain whitelist validation (my.westminster.ac.uk, iit.ac.lk)
 - URL and date format validation
 - Required field validation with appropriate error responses
 

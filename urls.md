@@ -6,7 +6,7 @@
 POST http://localhost/web_api/index.php/api/auth/register
 Body (JSON):
 {
-  "email":"john.doe@university.edu",
+  "email":"thanuja.any_student_id@iit.ac.lk",
   "password":"password123"
 }
 
@@ -20,7 +20,7 @@ Response:
 POST http://localhost/web_api/index.php/api/auth/login
 Body (JSON):
 {
-  "email":"john.doe@university.edu",
+  "email":"thanuja.any_student_id@iit.ac.lk",
   "password":"password123"
 }
 
@@ -41,7 +41,7 @@ Response:
 POST http://localhost/web_api/index.php/api/auth/request_reset
 Body (JSON):
 {
-  "email":"john.doe@university.edu"
+  "email":"thanuja.any_student_id@iit.ac.lk"
 }
 
 Response:

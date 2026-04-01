@@ -44,7 +44,7 @@ Create a new user account with email and password.
 **Request Body**:
 ```json
 {
-  "email": "sathsara.vx@university.edu",
+  "email": "thanuja.any_student_id@iit.ac.lk",
   "password": "Secure@Pass123"
 }
 ```
@@ -75,7 +75,7 @@ Create a new user account with email and password.
 ```
 
 **Validation Rules**:
-- Email must match pattern: `*@university.edu` or `*@alumni.university.edu`
+- Email must match pattern: `*@my.westminster.ac.uk` or `*@iit.ac.lk`
 - Password must be at least 8 characters long
 - Email must be unique in the database
 
@@ -141,7 +141,7 @@ Authenticate user with email and password, creates server session.
 **Request Body**:
 ```json
 {
-  "email": "sathsara.vx@university.edu",
+  "email": "thanuja.any_student_id@iit.ac.lk",
   "password": "Secure@Pass123"
 }
 ```
@@ -224,7 +224,7 @@ Initiate password reset process for user account.
 **Request Body**:
 ```json
 {
-  "email": "sathsara.vx@university.edu"
+  "email": "thanuja.any_student_id@iit.ac.lk"
 }
 ```
 

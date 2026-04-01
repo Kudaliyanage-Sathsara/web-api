@@ -64,7 +64,7 @@ class Auth extends CI_Controller {
      * ? Validation Flow:
      
      * 1. Extract email and password from JSON or form data
-     * 2. Validate email format and allowed domain (university.edu, alumni.university.edu on;y)
+     * 2. Validate email format and allowed domain (@my.westminster.ac.uk, @iit.ac.lk)
      * 3. Enforce minimum password length (8 characters minimum)
      * *. Enforce password complexity (uppercase, lowercase, number, special character)
      * 4. Check if email is already registered in database.
@@ -77,7 +77,7 @@ class Auth extends CI_Controller {
      * @return void Outputs JSON response with message or error
      * 
      * Request (JSON or Form):
-     * email: string (must be university.edu or alumni.university.edulony)
+     * email: string (must be @my.westminster.ac.uk or @iit.ac.lk)
      * password: string (minimum 8 characters)
      * 
      * Response Success :
