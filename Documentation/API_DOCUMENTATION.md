@@ -45,7 +45,7 @@ Create a new user account with email and password.
 ```json
 {
   "email": "thanuja.any_student_id@iit.ac.lk",
-  "password": "Secure@Pass123"
+  "password": "Secure@pass123456"
 }
 ```
 **Response**:
