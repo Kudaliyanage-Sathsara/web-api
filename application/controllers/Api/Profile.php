@@ -113,7 +113,7 @@ class Profile extends CI_Controller {
      * Get Complete User Profile
      * 
      * Retrieves all profile data for authenticated user including personal info,
-     * LinkedIn profiles, and all credential sections (degrees, certs, etc).
+     * LinkedIn profiles, and all credential sections.
      * 
      * Data Structure Returned:
      * - personal: user_personal_infos row (full_name, biography, profile_image_url)

@@ -34,7 +34,7 @@ class Auth extends CI_Controller {
  * 3. If not, read the raw request body
  * 4. Remove extra spaces
  * 5. Convert JSON into an array
- * 6. If JSON is invalid, return an empty array
+ * 6. If JSON is invalid, return an empty arraysg
  *
  * @return array JSON data as an array or empty array if invalid
  */
@@ -187,7 +187,7 @@ class Auth extends CI_Controller {
      * 2. Query database for user record with matching email.
      * 3. Check user account is email-verified (is_verified=1)
      * 4. Compare submitted password against stored bcrypt hash
-     * 5. If all checks pass: create session with user_id, email, logged_in flag
+     * 4. If all checks pass: create session with user_id, email, logged_in flag
      * 6. Return success message
      * Security Considerations:
      * 1 Passwords are compared using password_verify() (bcrypt comparison)
@@ -316,8 +316,8 @@ class Auth extends CI_Controller {
      * Password Reset Validation & Execution:
      * 1. Extract reset token and new password from request
      * 2. Query password_reset_tokens table for matching token
-     * 3. Verify token hasn't been used .
-     * 4. Verify token hasn't expired .
+     * 3. Verify token has not been used .
+     * 4. Verify token has not expired .
      * 5. Hash new password using bcrypt (PASSWORD_BCRYPT)
      * 6. Update user record with new password hash
      * 7. Mark token as used (used=1) to prevent reuse
