@@ -142,7 +142,7 @@ Authenticate user with email and password, creates server session.
 ```json
 {
   "email": "thanuja.any_student_id@iit.ac.lk",
-  "password": "Secure@Pass123"
+  "password": "Secure@12345"
 }
 ```
 
@@ -272,7 +272,7 @@ Update user password using reset token.
 ```json
 {
   "token": "reset_token_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2",
-  "password": "NewSecurePass456"
+  "password": "NewSecurepassv1235"
 }
 ```
 

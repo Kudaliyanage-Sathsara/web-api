@@ -207,23 +207,6 @@ private $sectionTables = [
 
 **Single Responsibility**: Manage user account operations
 
-
-**Public Methods**:
-
-```php
-create_user($email, $password)
-  → Creates new user with hashed password
-  → Used by: Auth::register()
-
-get_by_email($email)
-  → Retrieves user by email
-  → Used by: Auth::login(), Auth::register()
-
-verify_user($id)
-  → Marks user email as verified
-  → Used by: Auth::verify_email()
-```
-
 ---
 
 #### Token Model
@@ -451,16 +434,6 @@ if (!$record) {
 - Error responses can trigger rate limiting
 - Prevents brute force through error analysis
 - Maintains API stability under attack
-
-### Best Practices Implemented
-
-✓ Consistent error response format
-✓ Appropriate HTTP status codes
-✓ Input validation at entry points
-✓ Sanitized error messages
-✓ Comprehensive error logging
-✓ Graceful degradation
-✓ Client-friendly error descriptions
 
 
 ## Extensibility & Scalability
