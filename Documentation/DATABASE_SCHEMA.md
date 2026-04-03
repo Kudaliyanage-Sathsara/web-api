@@ -62,13 +62,6 @@ Stores email verification tokens for newly registered users.
 - Expiration: NOW() + INTERVAL 24 HOURS
 - One-time use: can only be used when used=0
 
-**Sample Data**:
-```sql
-INSERT INTO email_verification_tokens 
-  (user_id, token, used, expires_at) VALUES
-(3, 'sample_verification_token_1234567890abcdef', 0, DATE_ADD(NOW(), INTERVAL 24 HOUR));
-```
-
 ---
 
 ### 3. `password_reset_tokens` Table
@@ -96,12 +89,6 @@ Stores password reset tokens for account recovery.
 - Expiration: NOW() + INTERVAL 1 HOUR (shorter than email verification for security)
 - One-time use: marked as used=1 after successful password reset
 
-**Sample Data**:
-```sql
-INSERT INTO password_reset_tokens 
-  (user_id, token, used, expires_at) VALUES
-(1, 'sample_reset_token_abcdef1234567890', 0, DATE_ADD(NOW(), INTERVAL 1 HOUR));
-```
 
 ---
 
@@ -132,14 +119,6 @@ Stores basic personal profile information for each user.
 - Allowed types: gif, jpg, jpeg, png
 - URL stored as absolute path for easy access
 
-**Sample Data**:
-```sql
-INSERT INTO user_personal_infos 
-  (user_id, full_name, biography, profile_image_url) VALUES
-(1, 'John Michael Doe', 'Software engineer with 5+ years experience', 
- 'http://localhost/alumni/uploads/profile_images/abc123def456.jpg');
-```
-
 ---
 
 ### 5. `user_linkedin_profiles` Table
@@ -163,14 +142,6 @@ Stores multiple LinkedIn profile URLs for each user.
 - Validated with filter_var(FILTER_VALIDATE_URL)
 - Must include http:// or https://
 - Examples: https://linkedin.com/in/thanuja, https://linkedin.com/company/acme
-
-**Sample Data**:
-```sql
-INSERT INTO user_linkedin_profiles 
-  (user_id, url, label) VALUES
-(1, 'https://linkedin.com/in/johndoe', 'Personal LinkedIn'),
-(1, 'https://linkedin.com/company/acme-corp', 'Company Page');
-```
 
 ---
 
@@ -199,14 +170,6 @@ Stores educational degrees earned by users.
 - ISO 8601 format: YYYY-MM-DD
 - Examples: 2020-05-30, 2023-12-15
 
-**Sample Data**:
-```sql
-INSERT INTO user_degrees 
-  (user_id, institution, degree, field, degree_url, completion_date) VALUES
-(1, 'University of Technology', 'Bachelor of Science', 'Computer Science', 
- 'https://example.com/verify/degree123', '2020-05-30');
-```
-
 ---
 
 ### 7. `user_certifications` Table
@@ -232,14 +195,6 @@ Stores professional certifications obtained by users.
 - Microsoft Azure Administrator
 - Oracle Database Administrator
 - Kubernetes (CKAD)
-
-**Sample Data**:
-```sql
-INSERT INTO user_certifications 
-  (user_id, title, provider, cert_url, completion_date) VALUES
-(1, 'AWS Solutions Architect - Professional', 'Amazon Web Services', 
- 'https://aws.amazon.com/verification/abc123', '2023-06-15');
-```
 
 ---
 
@@ -267,14 +222,6 @@ Stores professional licenses held by users.
 - Registered Nurse (RN)
 - State-specific licenses
 
-**Sample Data**:
-```sql
-INSERT INTO user_licenses 
-  (user_id, title, issuer, license_url, completion_date) VALUES
-(1, 'Professional Engineer - Software', 'State Board of Professional Engineers', 
- 'https://verify.state.gov/license/PE123456', '2021-03-20');
-```
-
 ---
 
 ### 9. `user_short_courses` Table
@@ -299,14 +246,6 @@ Stores short-term training courses and skill development programs.
 - LinkedIn Learning, Pluralsight
 - Datacamp, Codecademy
 - Internal company training
-
-**Sample Data**:
-```sql
-INSERT INTO user_short_courses 
-  (user_id, title, provider, course_url, completion_date) VALUES
-(1, 'Advanced Python Programming', 'Coursera', 
- 'https://coursera.org/verify/abc123def456', '2023-09-10');
-```
 
 ---
 
@@ -336,16 +275,6 @@ Stores employment history and work experience records.
 **Date Format**:
 - ISO 8601 format: YYYY-MM-DD
 - start_date must be <= end_date (if end_date provided)
-
-**Sample Data**:
-```sql
-INSERT INTO user_employment_history 
-  (user_id, company, role, start_date, end_date, description) VALUES
-(1, 'Tech Company Inc', 'Senior Software Engineer', '2020-06-01', NULL, 
- 'Led development of core platform features. Mentored 5 junior developers.'),
-(1, 'Startup LLC', 'Full Stack Developer', '2018-01-15', '2020-05-31', 
- 'Built and maintained web applications using React and Node.js');
-```
 
 ---
 

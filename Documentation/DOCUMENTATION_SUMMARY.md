@@ -61,6 +61,7 @@ Complete documentation has been created for the Alumni Profile Web API project. 
 ---
 
 ### 3. `DATABASE_SCHEMA.md`
+
 **Location**: `c:\xampp\htdocs\web_api\DATABASE_SCHEMA.md`
 
 **Content**: Comprehensive database documentation with 10 tables and 60+ fields:
