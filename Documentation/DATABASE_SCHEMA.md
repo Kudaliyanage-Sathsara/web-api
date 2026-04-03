@@ -371,12 +371,6 @@ CONSTRAINT fk_user_id
   ON DELETE CASCADE
 ```
 
-**Cascade Delete Behavior**:
-- When user deleted from users table
-- All related profile records automatically deleted
-- Ensures referential integrity
-- Prevents orphaned records
-
 ---
 
 
