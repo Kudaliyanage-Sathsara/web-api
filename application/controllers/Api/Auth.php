@@ -103,7 +103,7 @@ class Auth extends CI_Controller {
             return;
         }
             if(strlen($password) < 8){
-                echo json_encode(["error"=>"Weak password"]);
+                echo json_encode(["error"=>"Weak password : Password must include uppercase, lowercase, number, and special character"]);
                 return;
             }
 
