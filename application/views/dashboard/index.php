@@ -403,11 +403,7 @@
                         <i class="fas fa-microscope me-2"></i>Analysis
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo base_url('dashboard/graphs'); ?>">
-                        <i class="fas fa-chart-bar me-2"></i>Analytics
-                    </a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo base_url('dashboard/alumni_list'); ?>">
                         <i class="fas fa-users me-2"></i>Alumni List
@@ -435,7 +431,7 @@
             </div>
 
             <!-- Quick Stats Cards -->
-            <div class="row mb-4">
+            <!-- <div class="row mb-4">
                 <div class="col-md-3 col-sm-6">
                     <div class="card stat-card primary">
                         <div class="card-body">
@@ -468,13 +464,13 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Charts Section Title -->
-            <h4 class="section-title"><i class="fas fa-chart-pie"></i>Analytics & Statistics</h4>
+            <!-- <h4 class="section-title"><i class="fas fa-chart-pie"></i>Analytics & Statistics</h4> -->
 
             <!-- Charts Row -->
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-6">
                     <div class="chart-card">
                         <div class="card-header">
@@ -510,7 +506,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

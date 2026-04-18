@@ -380,14 +380,17 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="graduation_year" class="form-label">Graduation Year</label>
-                            <select class="form-select" id="graduation_year" name="graduation_year">
-                                <option value="">All Years</option>
-                                <option value="2019" <?php echo ($filters['graduation_year'] ?? '') == '2019' ? 'selected' : ''; ?>>2019</option>
-                                <option value="2020" <?php echo ($filters['graduation_year'] ?? '') == '2020' ? 'selected' : ''; ?>>2020</option>
-                                <option value="2021" <?php echo ($filters['graduation_year'] ?? '') == '2021' ? 'selected' : ''; ?>>2021</option>
-                            </select>
-                        </div>
+    <label for="graduation_year" class="form-label">Graduation Year</label>
+    <input 
+        type="number" 
+        class="form-control" 
+        id="graduation_year" 
+        name="graduation_year"
+        min="1990" 
+        max="<?php echo date('Y'); ?>"
+        value="<?php echo $filters['graduation_year'] ?? ''; ?>"
+        placeholder="Enter Graduation Year">
+</div>
                         <div class="col-md-4">
                             <label for="industry_sector" class="form-label">Industry Sector</label>
                             <select class="form-select" id="industry_sector" name="industry_sector">
@@ -401,7 +404,67 @@
                             <button type="submit" class="btn btn-primary me-2">Apply Filters</button>
                             <a href="<?php echo base_url('dashboard/alumni_list'); ?>" class="btn btn-outline-secondary">Reset</a>
                         </div>
+                        <div class="col-md-12 mt-3">
+                            <div class="d-flex flex-wrap gap-2 align-items-end">
+                                <div class="flex-grow-1">
+                                    <label for="presetName" class="form-label">Preset name</label>
+                                    <input id="presetName" type="text" class="form-control" placeholder="Save current filters as preset">
+                                </div>
+                                <div class="d-flex gap-2 align-items-end">
+                                    <button type="button" class="btn btn-success" onclick="saveFilterPreset()">Save Preset</button>
+                                    <select id="savedPresets" class="form-select">
+                                        <option value="">Load saved preset</option>
+                                    </select>
+                                    <button type="button" class="btn btn-outline-primary" onclick="applyPreset()">Apply</button>
+                                    <button type="button" class="btn btn-outline-danger" onclick="removeSelectedPreset()">Delete</button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-file-alt me-2"></i>Report Builder</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Select metrics for export</label>
+                            <div class="form-check">
+                                <input class="form-check-input report-metric" type="checkbox" value="full_name" id="metricName" checked>
+                                <label class="form-check-label" for="metricName">Full Name</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input report-metric" type="checkbox" value="email" id="metricEmail" checked>
+                                <label class="form-check-label" for="metricEmail">Email</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input report-metric" type="checkbox" value="programme" id="metricProgramme" checked>
+                                <label class="form-check-label" for="metricProgramme">Programme</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input report-metric" type="checkbox" value="graduation_year" id="metricGraduation" checked>
+                                <label class="form-check-label" for="metricGraduation">Graduation Year</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input report-metric" type="checkbox" value="industry_sector" id="metricSector" checked>
+                                <label class="form-check-label" for="metricSector">Industry Sector</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input report-metric" type="checkbox" value="current_location" id="metricLocation" checked>
+                                <label class="form-check-label" for="metricLocation">Current Location</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <button type="button" class="btn btn-primary w-100 mb-2" onclick="downloadReportPDF()">Download Custom Report</button>
+                                <button type="button" class="btn btn-outline-secondary w-100 mb-2" onclick="exportToCSV()">Export Filtered CSV</button>
+                                <button type="button" class="btn btn-outline-secondary w-100" onclick="exportToPDF()">Export Current List as PDF</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -432,7 +495,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($alumni as $alum): ?>
-                                        <tr>
+                                        <tr data-full_name="<?php echo htmlspecialchars($alum->full_name ?: 'N/A'); ?>" data-email="<?php echo htmlspecialchars($alum->email); ?>" data-programme="<?php echo htmlspecialchars($alum->programme ?: 'N/A'); ?>" data-graduation_year="<?php echo htmlspecialchars($alum->graduation_year ?: 'N/A'); ?>" data-industry_sector="<?php echo htmlspecialchars($alum->industry_sector ?: 'N/A'); ?>" data-current_location="<?php echo htmlspecialchars($alum->current_location ?: 'N/A'); ?>">
                                             <td>
                                                 <?php if ($alum->profile_image_url): ?>
                                                     <img src="<?php echo $alum->profile_image_url; ?>" alt="Profile" class="rounded-circle" width="40" height="40">
@@ -482,33 +545,188 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script>
+        const filterPresetKey = 'alumni_filter_presets';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPresets();
+        });
+
         function viewProfile(userId) {
-            // In a full implementation, this would fetch detailed profile data
             alert('Profile view for user ' + userId + ' would be implemented here');
         }
 
-        function exportToCSV() {
+        function getFilterParams() {
             const programme = document.getElementById('programme').value;
             const graduation_year = document.getElementById('graduation_year').value;
             const industry_sector = document.getElementById('industry_sector').value;
-
-            let url = '<?php echo base_url("api/alumni/export_csv"); ?>';
             const params = new URLSearchParams();
 
             if (programme) params.append('programme', programme);
             if (graduation_year) params.append('graduation_year', graduation_year);
             if (industry_sector) params.append('industry_sector', industry_sector);
 
+            return params;
+        }
+
+        function exportToCSV() {
+            let url = '<?php echo base_url("dashboard/alumni_export_csv"); ?>';
+            const params = getFilterParams();
             if (params.toString()) {
                 url += '?' + params.toString();
             }
-
             window.location.href = url;
         }
 
         function exportToPDF() {
-            alert('PDF export would be implemented here');
+            const headers = ['Name', 'Email', 'Programme', 'Graduation Year', 'Industry Sector', 'Location'];
+            const rows = Array.from(document.querySelectorAll('tbody tr')).map(row => [
+                row.dataset.full_name,
+                row.dataset.email,
+                row.dataset.programme,
+                row.dataset.graduation_year,
+                row.dataset.industry_sector,
+                row.dataset.current_location
+            ]);
+
+            if (!rows.length) {
+                alert('No data available to export.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+            doc.setFontSize(16);
+            doc.text('Alumni Directory Export', 14, 20);
+            doc.setFontSize(11);
+            doc.text(`Filters: ${formatFilterSummary()}`, 14, 28);
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 36,
+                styles: { fontSize: 9, cellPadding: 3 },
+                headStyles: { fillColor: [102, 126, 234] }
+            });
+            doc.save('alumni_directory_export.pdf');
+        }
+
+        function downloadReportPDF() {
+            const selectedMetrics = Array.from(document.querySelectorAll('.report-metric:checked')).map(input => input.value);
+            if (!selectedMetrics.length) {
+                alert('Please select at least one metric for the report.');
+                return;
+            }
+
+            const metricsLabelMap = {
+                full_name: 'Full Name',
+                email: 'Email',
+                programme: 'Programme',
+                graduation_year: 'Graduation Year',
+                industry_sector: 'Industry Sector',
+                current_location: 'Current Location'
+            };
+
+            const headers = selectedMetrics.map(field => metricsLabelMap[field] || field);
+            const rows = Array.from(document.querySelectorAll('tbody tr')).map(row => selectedMetrics.map(field => row.dataset[field] || 'N/A'));
+
+            if (!rows.length) {
+                alert('No data available to include in the report.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+            doc.setFontSize(16);
+            doc.text('Custom Alumni Report', 14, 20);
+            doc.setFontSize(11);
+            doc.text(`Filters: ${formatFilterSummary()}`, 14, 28);
+            doc.text(`Metrics: ${headers.join(', ')}`, 14, 34);
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 40,
+                styles: { fontSize: 9, cellPadding: 3 },
+                headStyles: { fillColor: [17, 153, 142] }
+            });
+            doc.save('custom_alumni_report.pdf');
+        }
+
+        function formatFilterSummary() {
+            const programme = document.getElementById('programme').value || 'Any';
+            const graduation_year = document.getElementById('graduation_year').value || 'Any';
+            const industry_sector = document.getElementById('industry_sector').value || 'Any';
+            return `Programme: ${programme}, Year: ${graduation_year}, Industry: ${industry_sector}`;
+        }
+
+        function saveFilterPreset() {
+            const presetName = document.getElementById('presetName').value.trim();
+            if (!presetName) {
+                alert('Enter a name for the preset.');
+                return;
+            }
+
+            const presets = JSON.parse(localStorage.getItem(filterPresetKey) || '{}');
+            presets[presetName] = {
+                programme: document.getElementById('programme').value,
+                graduation_year: document.getElementById('graduation_year').value,
+                industry_sector: document.getElementById('industry_sector').value
+            };
+            localStorage.setItem(filterPresetKey, JSON.stringify(presets));
+            document.getElementById('presetName').value = '';
+            loadPresets();
+            alert('Preset saved successfully.');
+        }
+
+        function loadPresets() {
+            const presets = JSON.parse(localStorage.getItem(filterPresetKey) || '{}');
+            const select = document.getElementById('savedPresets');
+            select.innerHTML = '<option value="">Load saved preset</option>';
+            Object.keys(presets).forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+        }
+
+        function applyPreset() {
+            const select = document.getElementById('savedPresets');
+            const presetName = select.value;
+            if (!presetName) {
+                alert('Choose a preset to apply.');
+                return;
+            }
+
+            const presets = JSON.parse(localStorage.getItem(filterPresetKey) || '{}');
+            const preset = presets[presetName];
+            if (!preset) {
+                alert('Selected preset was not found.');
+                return;
+            }
+
+            document.getElementById('programme').value = preset.programme || '';
+            document.getElementById('graduation_year').value = preset.graduation_year || '';
+            document.getElementById('industry_sector').value = preset.industry_sector || '';
+            document.querySelector('form').submit();
+        }
+
+        function removeSelectedPreset() {
+            const select = document.getElementById('savedPresets');
+            const presetName = select.value;
+            if (!presetName) {
+                alert('Choose a preset to delete.');
+                return;
+            }
+
+            const presets = JSON.parse(localStorage.getItem(filterPresetKey) || '{}');
+            if (presets[presetName]) {
+                delete presets[presetName];
+                localStorage.setItem(filterPresetKey, JSON.stringify(presets));
+                loadPresets();
+                alert('Preset deleted.');
+            }
         }
     </script>
 </body>

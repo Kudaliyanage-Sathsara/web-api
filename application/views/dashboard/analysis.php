@@ -486,6 +486,15 @@
                 </div>
             </div>
 
+            <div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
+                <button type="button" class="btn btn-sm btn-primary" onclick="downloadChartImage('degreesChart','degrees-by-type')">Download Degrees Chart</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="downloadChartImage('institutionsChart','institutions-by-users')">Download Institutions Chart</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="downloadChartImage('rolesChart','roles-chart')">Download Roles Chart</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="downloadChartImage('companiesChart','companies-chart')">Download Companies Chart</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="downloadChartImage('registrationChart','registration-trends')">Download Registration Chart</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="downloadChartImage('certificationsChart','certifications-chart')">Download Certifications Chart</button>
+            </div>
+
             <!-- User Statistics Overview -->
             <div class="row mb-4">
                 <h4 class="section-title"><i class="fas fa-users"></i>User Statistics</h4>
@@ -849,6 +858,18 @@
                 maintainAspectRatio: false
             }
         });
+
+        function downloadChartImage(chartId, fileName) {
+            const canvas = document.getElementById(chartId);
+            if (!canvas) {
+                alert('Chart element not found.');
+                return;
+            }
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `${fileName}.png`;
+            link.click();
+        }
     </script>
 </body>
 </html>
