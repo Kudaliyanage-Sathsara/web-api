@@ -294,11 +294,7 @@ class Auth extends CI_Controller {
         if(!$user){ echo json_encode(["error"=>"Email not found"]); return; }
 
         $token = generate_secure_token();
-        $this->db->insert("password_reset_tokens",[
-            "user_id"=>$user->id,
-            "token"=>$token,
-            "expires_at"=>date("Y-m-d H:i:s",strtotime("+1 hour"))
-        ]);
+        $this->Token_model->create_password_reset_token($user->id,$token);
 
         echo json_encode(["message"=>"Reset email sent","token"=>$token]);
     }
@@ -347,16 +343,12 @@ class Auth extends CI_Controller {
         $token = $this->input->post("token") ?: ($input['token'] ?? null);
         $password = $this->input->post("password") ?: ($input['password'] ?? null);
 
-        $this->db->where("token",$token);
-        $this->db->where("used",0);
-        $this->db->where("expires_at >",date("Y-m-d H:i:s"));
-        $row = $this->db->get("password_reset_tokens")->row();
-
-        if(!$row){ echo json_encode(["error"=>"Invalid token"]); return; }
+        $token_data = $this->Token_model->verify_password_reset_token($token);
+        if(!$token_data){ echo json_encode(["error"=>"Invalid token"]); return; }
 
         $hash = password_hash($password,PASSWORD_BCRYPT);
-        $this->db->where("id",$row->user_id)->update("users",["password"=>$hash]);
-        $this->db->where("id",$row->id)->update("password_reset_tokens",["used"=>1]);
+        $this->User_model->update_password($token_data->user_id, $hash);
+        $this->Token_model->mark_password_reset_token_used($token_data->id);
 
         echo json_encode(["message"=>"Password updated"]);
     }

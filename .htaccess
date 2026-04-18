@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /alumni/
+    RewriteBase /web_api/
 
     # Redirect all requests to CodeIgniter front controller.
     RewriteCond %{REQUEST_FILENAME} !-f

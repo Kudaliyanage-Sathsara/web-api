@@ -52,3 +52,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+/*
+| -------------------------------------------------------------------------
+| Custom Routes
+| -------------------------------------------------------------------------
+*/
+
+// Auth routes
+$route['auth/login'] = 'auth/login';
+$route['auth/register'] = 'auth/register';
+$route['auth/process_login'] = 'auth/process_login';
+$route['auth/process_register'] = 'auth/process_register';
+$route['auth/logout'] = 'auth/logout';
+$route['auth/forgot_password'] = 'auth/forgot_password';
+$route['auth/process_forgot_password'] = 'auth/process_forgot_password';
+$route['auth/reset_password'] = 'auth/reset_password';
+$route['auth/process_reset_password'] = 'auth/process_reset_password';
+
+// Profile routes
+$route['profile'] = 'profile/index';
+$route['profile/edit'] = 'profile/edit';
+$route['profile/update'] = 'profile/update';
+$route['profile/add_linkedin'] = 'profile/add_linkedin';
+$route['profile/delete_linkedin/(:num)'] = 'profile/delete_linkedin/$1';
+$route['profile/add_section/(:any)'] = 'profile/add_section/$1';
+$route['profile/update_section/(:any)'] = 'profile/update_section/$1';
+$route['profile/delete_section/(:any)'] = 'profile/delete_section/$1';
+
+// Dashboard routes
+$route['dashboard'] = 'dashboard/index';
+$route['dashboard/graphs'] = 'dashboard/graphs';
+$route['dashboard/alumni_list'] = 'dashboard/alumni_list';
+
+// API routes
+$route['api/alumni'] = 'api/alumni/index';
+$route['api/alumni/stats'] = 'api/alumni/stats';
+$route['api/alumni/export_csv'] = 'api/alumni/export_csv';

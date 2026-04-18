@@ -114,5 +114,8 @@ $autoload['language'] = array();
 */
 $autoload['model'] = array(
     'User_model',
-    'Token_model'
+    'Token_model',
+    'Profile_model',
+    'Alumni_model',
+    'Api_key_model'
 );

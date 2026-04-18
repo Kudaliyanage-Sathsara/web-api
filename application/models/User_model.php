@@ -21,4 +21,10 @@ class User_model extends CI_Model {
         $this->db->where("id",$id);
         return $this->db->update("users",["is_verified"=>1]);
     }
+
+    public function update_password($user_id, $hashed_password)
+    {
+        $this->db->where("id", $user_id);
+        return $this->db->update("users", ["password" => $hashed_password]);
+    }
 }
