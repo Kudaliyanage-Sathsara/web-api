@@ -284,10 +284,11 @@
             border-radius: 12px;
             box-shadow: var(--shadow-sm);
             margin-bottom: 2rem;
-            display: flex;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto auto;
             gap: 1rem;
-            flex-wrap: wrap;
-            align-items: flex-end;
+            align-items: end;
+            transition: var(--transition);
         }
 
         body.dark-mode .filter-section {
@@ -296,13 +297,25 @@
         }
 
         .filter-section input,
-        .filter-section select {
-            flex: 1;
-            min-width: 200px;
+        .filter-section select,
+        .filter-section button {
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        body.dark-mode .filter-section input,
+        body.dark-mode .filter-section select {
+            background: var(--bg-primary);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
         }
 
         .filter-section button {
             flex-shrink: 0;
+            white-space: nowrap;
         }
 
         /* ===== Alumni Cards / Table ===== */
@@ -449,9 +462,19 @@
         }
 
         /* ===== Responsive Breakpoints ===== */
+        /* Tablet - 1024px */
         @media (max-width: 1024px) {
             .main-content {
                 padding: 1.5rem;
+            }
+
+            .filter-section {
+                grid-template-columns: 1fr 1fr;
+                padding: 1rem 1.5rem;
+            }
+
+            .filter-section button {
+                grid-column: auto;
             }
 
             .alumni-grid {
@@ -459,11 +482,24 @@
                 gap: 1.5rem;
             }
 
-            .filter-section {
-                padding: 1rem 1.5rem;
+            .chart-card .card-body {
+                height: 300px;
+            }
+
+            .stat-card h3 {
+                font-size: 2.2rem;
+            }
+
+            .top-bar {
+                padding: 1.2rem 1.5rem;
+            }
+
+            .top-bar h2 {
+                font-size: 1.5rem;
             }
         }
 
+        /* Mobile - 768px */
         @media (max-width: 768px) {
             .navbar-top .hamburger {
                 display: block;
@@ -475,6 +511,10 @@
 
             .sidebar {
                 width: 280px;
+                top: 0;
+                left: 0;
+                height: auto;
+                max-height: 100vh;
                 transform: translateX(-100%);
                 padding-top: 1rem;
             }
@@ -488,27 +528,21 @@
                 display: block;
             }
 
+            .sidebar-header {
+                padding: 1rem 1.5rem;
+                margin-bottom: 1rem;
+            }
+
             .main-content {
                 margin-left: 0;
                 padding: 1rem;
             }
 
-            .top-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem;
-                gap: 0.75rem;
-            }
-
-            .top-bar h2 {
-                font-size: 1.3rem;
-                width: 100%;
-            }
-
             .filter-section {
-                flex-direction: column;
+                grid-template-columns: 1fr;
                 gap: 0.75rem;
                 padding: 1rem;
+                margin-bottom: 1.5rem;
             }
 
             .filter-section input,
@@ -523,6 +557,19 @@
                 gap: 1rem;
             }
 
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+                gap: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .top-bar h2 {
+                font-size: 1.3rem;
+                width: 100%;
+            }
+
             .table {
                 font-size: 0.85rem;
             }
@@ -534,9 +581,33 @@
 
             .section-title {
                 font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+
+            .user-badge {
+                width: 100%;
+                text-align: center;
+                font-size: 0.85rem;
+            }
+
+            .alumni-card .card-header {
+                padding: 1rem;
+            }
+
+            .alumni-card .card-body {
+                padding: 1rem;
+            }
+
+            .alumni-card h5 {
+                font-size: 1rem;
+            }
+
+            .alumni-card .info-item {
+                font-size: 0.85rem;
             }
         }
 
+        /* Small Mobile - 576px */
         @media (max-width: 576px) {
             .navbar-top {
                 padding: 0.75rem 1rem;
@@ -553,6 +624,7 @@
 
             .top-bar {
                 padding: 0.75rem;
+                margin-bottom: 1rem;
             }
 
             .top-bar h2 {
@@ -561,32 +633,41 @@
 
             .filter-section {
                 padding: 0.75rem;
+                margin-bottom: 1rem;
+                gap: 0.5rem;
+            }
+
+            .filter-section input,
+            .filter-section select,
+            .filter-section button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
             }
 
             .alumni-card .card-header {
-                padding: 1rem;
+                padding: 0.75rem;
             }
 
             .alumni-card .card-body {
-                padding: 1rem;
+                padding: 0.75rem;
             }
 
             .alumni-card h5 {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
 
             .alumni-card .info-item {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
                 margin-bottom: 0.5rem;
             }
 
             .user-badge {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
             }
 
             .table {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
             }
 
             .table th,
@@ -596,33 +677,103 @@
 
             .section-title {
                 font-size: 1rem;
+                margin-bottom: 0.75rem;
             }
 
             .sidebar {
                 width: 260px;
             }
+
+            .sidebar .nav-link {
+                padding: 0.8rem 1rem;
+                margin: 0.25rem 0;
+                font-size: 0.9rem;
+            }
         }
 
+        /* Extra Small - 375px */
         @media (max-width: 375px) {
             .navbar-top {
                 padding: 0.5rem 0.75rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .navbar-top .logo {
+                font-size: 1rem;
+                gap: 0.25rem;
+            }
+
+            .navbar-top .right-section {
+                gap: 0.5rem;
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .main-content {
+                padding: 0.5rem;
+            }
+
+            .top-bar {
+                padding: 0.5rem;
+                margin-bottom: 0.75rem;
             }
 
             .top-bar h2 {
                 font-size: 1rem;
             }
 
+            .filter-section {
+                padding: 0.5rem;
+                margin-bottom: 0.75rem;
+                gap: 0.25rem;
+            }
+
+            .filter-section input,
+            .filter-section select,
+            .filter-section button {
+                padding: 0.4rem 0.5rem;
+                font-size: 0.8rem;
+            }
+
             .user-badge {
-                font-size: 0.75rem;
-                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .alumni-card {
+                margin-bottom: 0.75rem;
             }
 
             .alumni-card .card-header {
-                padding: 0.75rem;
+                padding: 0.5rem;
+            }
+
+            .alumni-card .card-body {
+                padding: 0.5rem;
             }
 
             .alumni-card h5 {
-                font-size: 0.95rem;
+                font-size: 0.85rem;
+            }
+
+            .alumni-card .info-item {
+                font-size: 0.75rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .section-title {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .sidebar {
+                width: 240px;
+            }
+
+            .sidebar .nav-link {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
             }
         }
     </style>

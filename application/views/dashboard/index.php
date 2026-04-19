@@ -490,6 +490,48 @@
             background: #764ba2;
         }
 
+        /* ===== Typing Animation ===== */
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes blink-cursor {
+            0%, 49% {
+                border-right: 3px solid #667eea;
+            }
+            50%, 100% {
+                border-right: 3px solid transparent;
+            }
+        }
+
+        .typing-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .typing-text {
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+            display: inline-block;
+            min-height: 1.8rem;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #667eea;
+            animation: typing 3s steps(40, end), blink-cursor 0.8s infinite;
+            font-size: 1.8rem;
+        }
+
+        body.dark-mode .typing-text {
+            color: var(--text-primary);
+        }
+
         /* ===== Responsive Breakpoints ===== */
         /* Tablet - 1024px */
         @media (max-width: 1024px) {
@@ -789,7 +831,7 @@
             <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle dark mode">
                 <i class="fas fa-moon"></i>
             </button>
-            <div class="user-badge"><?php echo htmlspecialchars($user_email); ?></div>
+
         </div>
     </div>
 
@@ -843,70 +885,15 @@
     <div class="main-content">
         <!-- Top Bar -->
         <div class="top-bar">
-            <h2><i class="fas fa-chart-line"></i>Dashboard Overview</h2>
-            <div class="user-badge">Welcome, <?php echo htmlspecialchars($user_email); ?></div>
+            <div class="typing-container">
+                <i class="fas fa-chart-line" style="color: #667eea; font-size: 1.5rem;"></i>
+                <h2 class="typing-text">Welcome to Alumni Dashboard</h2>
+            </div>
+            <div class="user-badge">Hello, <?php echo htmlspecialchars($user_email); ?></div>
         </div>
 
-        <!-- Quick Stats Cards Section (Uncomment to enable) -->
-        <div class="stats-grid">
-            <div class="stat-card primary">
-                <div class="card-body">
-                    <h5><i class="fas fa-users"></i>Total Alumni</h5>
-                    <h3 id="totalAlumni">0</h3>
-                </div>
-            </div>
-            <div class="stat-card success">
-                <div class="card-body">
-                    <h5><i class="fas fa-graduation-cap"></i>Programmes</h5>
-                    <h3 id="totalProgrammes">0</h3>
-                </div>
-            </div>
-            <div class="stat-card warning">
-                <div class="card-body">
-                    <h5><i class="fas fa-industry"></i>Industries</h5>
-                    <h3 id="totalIndustries">0</h3>
-                </div>
-            </div>
-            <div class="stat-card info">
-                <div class="card-body">
-                    <h5><i class="fas fa-calendar"></i>Recent Grads</h5>
-                    <h3 id="recentGraduates">0</h3>
-                </div>
-            </div>
-        </div>
+        
 
-        <!-- Analytics Section -->
-        <h4 class="section-title"><i class="fas fa-chart-pie"></i>Analytics & Statistics</h4>
-
-        <!-- Charts Grid -->
-        <div class="charts-grid">
-            <div class="chart-card">
-                <div class="card-header">
-                    <h5><i class="fas fa-bars"></i>Alumni by Programme</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="programmeChart"></canvas>
-                </div>
-            </div>
-            <div class="chart-card">
-                <div class="card-header">
-                    <h5><i class="fas fa-pie-chart"></i>Alumni by Industry</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="industryChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="chart-card">
-            <div class="card-header">
-                <h5><i class="fas fa-chart-line"></i>Graduation Trends</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="graduationChart"></canvas>
-            </div>
-        </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
