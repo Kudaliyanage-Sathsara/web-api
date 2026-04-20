@@ -377,6 +377,9 @@
                                 <option value="Computer Science" <?php echo ($filters['programme'] ?? '') == 'Computer Science' ? 'selected' : ''; ?>>Computer Science</option>
                                 <option value="Business Administration" <?php echo ($filters['programme'] ?? '') == 'Business Administration' ? 'selected' : ''; ?>>Business Administration</option>
                                 <option value="Engineering" <?php echo ($filters['programme'] ?? '') == 'Engineering' ? 'selected' : ''; ?>>Engineering</option>
+                                <option value="Information Technology" <?php echo ($filters['programme'] ?? '') == 'Information Technology' ? 'selected' : ''; ?>>Information Technology</option>
+                                <option value="Data Science" <?php echo ($filters['programme'] ?? '') == 'Data Science' ? 'selected' : ''; ?>>Data Science</option>
+                                <option value="Cybersecurity" <?php echo ($filters['programme'] ?? '') == 'Cybersecurity' ? 'selected' : ''; ?>>Cybersecurity</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -395,9 +398,15 @@
                             <label for="industry_sector" class="form-label">Industry Sector</label>
                             <select class="form-select" id="industry_sector" name="industry_sector">
                                 <option value="">All Sectors</option>
-                                <option value="Technology" <?php echo ($filters['industry_sector'] ?? '') == 'Technology' ? 'selected' : ''; ?>>Technology</option>
-                                <option value="Finance" <?php echo ($filters['industry_sector'] ?? '') == 'Finance' ? 'selected' : ''; ?>>Finance</option>
-                                <option value="Manufacturing" <?php echo ($filters['industry_sector'] ?? '') == 'Manufacturing' ? 'selected' : ''; ?>>Manufacturing</option>
+                                <option value="Technology" <?php echo ($alumni_info->industry_sector ?? '') == 'Technology' ? 'selected' : ''; ?>>Technology</option>
+                                        <option value="Finance" <?php echo ($alumni_info->industry_sector ?? '') == 'Finance' ? 'selected' : ''; ?>>Finance</option>
+                                        <option value="Healthcare" <?php echo ($alumni_info->industry_sector ?? '') == 'Healthcare' ? 'selected' : ''; ?>>Healthcare</option>
+                                        <option value="Education" <?php echo ($alumni_info->industry_sector ?? '') == 'Education' ? 'selected' : ''; ?>>Education</option>
+                                        <option value="Manufacturing" <?php echo ($alumni_info->industry_sector ?? '') == 'Manufacturing' ? 'selected' : ''; ?>>Manufacturing</option>
+                                        <option value="Consulting" <?php echo ($alumni_info->industry_sector ?? '') == 'Consulting' ? 'selected' : ''; ?>>Consulting</option>
+                                        <option value="Retail" <?php echo ($alumni_info->industry_sector ?? '') == 'Retail' ? 'selected' : ''; ?>>Retail</option>
+                                        <option value="Government" <?php echo ($alumni_info->industry_sector ?? '') == 'Government' ? 'selected' : ''; ?>>Government</option>
+                                        <option value="Other" <?php echo ($alumni_info->industry_sector ?? '') == 'Other' ? 'selected' : ''; ?>>Other</option>
                             </select>
                         </div>
                         <div class="col-12">
